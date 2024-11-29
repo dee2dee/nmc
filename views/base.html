@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>NMC | {{ .title }}</title>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+
+        <!-- Local -->
+        <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/assets/css/style.css" rel="stylesheet">
+    </head>
+<body>
+    <header class="header">
+        <div class="container-fluid">
+            <div class="row align-items-center py-2">
+                <div class="col-6">
+                    <a href="/" class="navbar-brand">
+                        <img src="/assets/images/indonet-logo.png" alt="Indonet Logo" width="150" height="50">
+                    </a>
+                </div>
+                <div class="col-6 text-right contact-info">
+                    <div class="d-flex align-items-center mr-3">
+                        <i class="fa fa-phone mr-2"></i>
+                        <span>(021) 27555222</span>
+                    </div>
+                    <span class="mx-2">|</span>
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-envelope mr-2"></i>
+                        <span>support@indonet.co.id</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Navbar Menu -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black fixed-top nb mt-6">
+        <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Monitoring
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/wu-corporate1">WU Corporate 1</a>
+                        <a class="dropdown-item" href="/wu-corporate2">WU Corporate 2</a>
+                        <a class="dropdown-item" href="https://prtg-netmon.indo.net.id/index.htm" target="_blank">PRTG Netmon</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        SOP
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/hsx-faq">HSX FAQ</a>
+                        <a class="dropdown-item" href="/files/pdfs/Indonet Org Chart_Nov 1st 2024.pdf" target="_blank">ORGANIZATION STRUCTURE
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ticket.indonet.id/" target="_blank">HSX Ticket Service</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/extention-phone">Extention Phone</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/escalation-procedure">Escalation Procedure</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/address-book">Address Book</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    </nav>
+    <!-- Loading dots -->
+    <div id="loading">
+        <div class="dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+        &nbsp;&nbsp;<p>Please wait...</p>
+    </div>
+    
+    <!-- Main Content -->
+    <div>
+        {{ block "content" . }}{{ end }}
+    </div>
+
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">NMC Login</h5>
+                </div>
+                
+                <div id="successAlertLogin" class="alert d-none" role="alert">
+                    Successfully!
+                </div>
+                <div class="modal-body">
+                    <div id="alert" class="alert alert-danger" role="alert" style="display: none;"></div>
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <input type="text" class="form-control search-input" id="username" placeholder="Username" required>
+                            <div class="invalid-feedback">Username is required.</div>
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" class="form-control search-input" id="password" placeholder="Password" required>
+                            <div class="invalid-feedback">Password is required.</div>
+                        </div>
+                        <button type="submit" class="btn btn-sm text-white btn-custome mb-4" id="loginButton">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Local -->
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+    <script src="/assets/js/popper.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var loadingElement = document.getElementById('loading');
+            if (!loadingElement) {
+                console.error('Element with ID "loading" not found.');
+                return;
+            }
+
+            var links = document.querySelectorAll('a');
+            links.forEach(function(link) {
+                if (link.target === '_blank') {
+                    return;
+                }
+
+                link.addEventListener('click', function(event) {
+                    if (link.getAttribute('href') === '#') {
+                        event.preventDefault();
+                        return;
+                    }
+                    
+                    if (link.closest('.accordion')) {
+                        return;
+                    }
+
+                    loadingElement.style.display = 'flex';
+
+                    setTimeout(function() {
+                        window.location.href = link.href;
+                    }, 500);
+                    event.preventDefault();
+                });
+            });
+        });
+
+        $('#loginModal').on('show.bs.modal', function (event) {
+            $.ajax({
+                url: '/session-status',
+                type: 'GET',
+                success: function(response) {
+                    if (response.loggedIn) {
+                        window.location.href = '/auth/dashboard';
+                        
+                    } else {
+                        $('#username').val('');
+                        $('#password').val('');
+                        $("#successAlertLogin").addClass('d-none');
+                    }
+                },
+                error: function() {
+                    console.error("Gagal memeriksa session status.");
+                    alert("Terjadi kesalahan saat memeriksa status login.");
+                }
+            });
+        });
+
+        $('#loginButton').on('click', function(e) {
+            e.preventDefault();
+
+            var isValid = true;
+
+            var username = $('#username').val();
+            var password = $('#password').val();
+
+            $('#loginForm input').removeClass('is-invalid');
+            $('.invalid-feedback').hide();
+
+            $('#loginForm input[required]').each(function () {
+                if ($(this).val().trim() === '') {
+                    isValid = false;
+                    $(this).addClass('is-invalid');
+                    $(this).siblings('.invalid-feedback').show();
+                }
+            });
+
+            if (!isValid) {
+                return;
+            }
+
+            var data = {
+                username: username,
+                password: password
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/login',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function(response) {
+
+                if (response.redirect) {
+                    $("#successAlertLogin")
+                    .text("Successfully!")
+                    .removeClass('d-none error')
+                    .addClass('success');
+
+                    setTimeout(function () {
+                        window.location.href = response.redirect;
+                    }, 500);
+
+                }
+            },
+            error: function(xhr) {
+                $("#successAlertLogin")
+                    .text("Invalid username or password!")
+                    .removeClass('d-none success')
+                    .addClass('error');
+
+                    setTimeout(function () {
+                        $("#successAlertLogin").addClass('d-none');
+                    }, 500);
+                }
+            });
+        });
+    </script>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light text-center text-lg-start py-4 mt-0">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0 text-left">
+                    <h5 class="text-uppercase">Address</h5>
+                    <p class="text-white">
+                        Rumah Indonet Jl. Rempoa Raya No 11 Ciputat, Tangerang Selatan, Indonesia
+                    </p>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0 text-left">
+                    <h5 class="text-uppercase">24 Hours Call Support</h5>
+                    <p class="text-white">
+                        <i class="fa fa-phone"></i> (021) 27555222<br>
+                    </p>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0 text-left">
+                    <h5 class="text-uppercase">Fax</h5>
+                    <p class="text-white">
+                        <i class="fas fa-fax"></i> (021) 73882626
+                    </p>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0 text-left">
+                    <h5 class="text-uppercase">Whatsapp</h5>
+                    <p class="text-white">
+                        <i class="fab fa-whatsapp"></i> 081572555222
+                    </p>
+                    <button class="btn btn-sm text-white btn-custome" data-toggle="modal" data-target="#loginModal">Login</button>
+                </div>
+            </div>
+        </div>
+        <!-- Footer copyright section -->
+        <div class="bg-dark text-light text-left text-lg-start py-4 mt-0">
+            <div class="mt-4">
+                <p class="ml-3">NMC v2 2024 - now</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,85 @@
+/* Styling sidebar */
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    height: 100vh;
+    background-color: #343a40;
+    color: #fff;
+    transition: all 0.3s;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+}
+#sidebar.collapsed {
+    margin-left: -250px;
+}
+.sidebar-header {
+    background-color: #3f464d;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+}
+.sidebar-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+.sidebar-item:hover {
+    background-color: #495057;
+}
+.navbar-nav .nav-item .nav-link {
+    color: #fff;
+    padding: 8px 16px;
+    font-size: 14px;
+}
+#content {
+    transition: margin-left 0.3s;
+    margin-left: 250px;
+    padding-top: 20px;
+}
+#content.expanded {
+    margin-left: 0;
+}
+.sidebar-item.active {
+    background-color: #495057;
+    color: rgb(184, 23, 23);
+}
+.sidebar-item.active .menu-icon, 
+.sidebar-item.active .menu-text {
+    color: white;
+}
+.nav-link {
+    padding-right: 20px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+}
+.menu-icon {
+    margin-right: 8px;
+    color: #ccc;
+}
+.triangle-icon {
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 6px solid #ccc;
+    margin-left: auto;
+}
+.active {
+    background-color: #123e6b;
+}
+.input-focus:focus {
+    border-color: #000;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+#successAlert #successAlertExtPhone {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: opacity 0.5s ease;
+}

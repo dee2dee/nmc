@@ -1,0 +1,93 @@
+package routers
+
+import (
+	"log"
+	"nmc/controllers"
+	"nmc/middlewares"
+	"nmc/views"
+	"text/template"
+
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
+	"github.com/gin-gonic/gin"
+)
+
+func SetupRouter() *gin.Engine {
+	r := gin.Default()
+
+	// Enkripsi Cookie
+	store := cookie.NewStore([]byte("dDskjsasfasjbchiusdyiFFKJhjdsfDoioajfDKFjHjkiifojafjDSPPPFK"))
+	store.Options(sessions.Options{
+		MaxAge:   3600,
+		HttpOnly: true,
+		Secure:   false,
+	})
+	r.Use(sessions.Sessions("session", store))
+
+	// Serve static files like CSS, JS, and images
+	r.Static("/assets", "./assets")
+	r.Static("/files/pdfs", "./files/pdfs")
+	r.Static("/files/excel", "./files/excel")
+
+	// Helper function 'add' dan 'sub'
+	r.SetFuncMap(template.FuncMap{
+		"add": func(a, b int) int { return a + b },
+		"sub": func(a, b int) int { return a - b },
+	})
+
+	// Load template
+	r.HTMLRender = views.LoadTemplates()
+
+	log.Println("Templates loaded successfully")
+
+	// GET
+	r.GET("/", controllers.HomePage)
+	r.GET("/address-book", controllers.GetAddressBook)
+	r.GET("/wu-corporate1", controllers.WuCorp1)
+	r.GET("/wu-corporate2", controllers.WuCorp2)
+	r.GET("/hsx-faq", controllers.HsxFaq)
+	r.GET("/escalation-procedure", controllers.GetEscalProcedure)
+	r.GET("/extention-phone", controllers.GetExtentionPhonePerDivisi)
+	r.GET("/divisions", controllers.GetDivisions)
+	r.GET("/session-status", controllers.SessionStatus)
+
+	// Route with auth
+	auth := r.Group("/auth")
+	auth.Use(middlewares.AuthRequired(), middlewares.NoCache())
+	auth.GET("/dashboard", controllers.Dashboard)
+	auth.GET("/contact", controllers.GetContact)
+	auth.GET("/escalation", controllers.GetEscalation)
+	auth.GET("/extention", controllers.GetExtentionPhone)
+	auth.GET("/cid", controllers.GetCID)
+	auth.GET("/user", controllers.GetUser)
+
+	// POST
+	r.POST("/contact/search", controllers.GetContact)
+	r.POST("/extention", controllers.AddExtentionPhone)
+	r.POST("/extention/search", controllers.GetExtentionPhone)
+	r.POST("/escalation", controllers.AddNewEscalation)
+	r.POST("/escalation/search", controllers.GetEscalation)
+	r.POST("/escal/search", controllers.GetEscalProcedure)
+	r.POST("/contact", controllers.AddContactAddress)
+	r.POST("/address-book", controllers.GetAddressBook)
+	r.POST("/login", controllers.Login)
+	r.POST("/logout", controllers.Logout)
+	r.POST("/user", controllers.AddUser)
+	r.POST("/user/search", controllers.GetUser)
+	r.POST("/cid", controllers.AddNewCID)
+
+	// PUT
+	r.PUT("/contact/:id", controllers.UpdateContactAddress)
+	r.PUT("/escalation/:id", controllers.UpdateEscalation)
+	r.PUT("/extention/:id", controllers.UpdateExtentionPhone)
+	r.PUT("/user/reset-password/:id", controllers.ResetPassword)
+
+	// DELETE
+	r.DELETE("/contact/:id", controllers.DeleteContactAddress)
+	r.DELETE("/escalation/:id", controllers.DeleteEscal)
+	r.DELETE("/extention/:id", controllers.DeleteExtPhone)
+	r.DELETE("/user/:id", controllers.DeleteUser)
+
+	return r
+
+}

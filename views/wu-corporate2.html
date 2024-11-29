@@ -1,0 +1,23 @@
+{{ define "content" }}
+	<div class="container-fluid">
+		<div class="row justify-content-center">
+			<div class="col-12">
+				<div class="header-01 mb-0 mt-7">
+					<h2 class="badge bg-black text-white mt-5 ml-3">Monitoring Corporate 2</h2>
+				</div>
+				<div class="content-inner-wu mt-4">
+					<iframe 
+						id="external-frame" 
+						style="width: 100%; height: 800px; border: none;"
+						allowfullscreen
+					>
+					</iframe>
+					<script>
+						var url = "http://117.54.12.81:8088/map.asp?map=Main%20Eldo.wup";
+						document.getElementById('external-frame').src = url;
+					</script>
+				</div>
+			</div>
+		</div>
+	</div>
+{{ end }}

@@ -1,0 +1,89 @@
+{{ define "content" }}
+<div class="container-fluid content-area">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="header-01 d-flex justify-content-between align-items-center mb-0 mt-7">
+                <h4 class="badge bg-black text-white mt-5 ml-3">Address Book</h4>
+                <form class="form-inline mt-4 mr-3" id="searchForm" method="POST" action="/address-book" style="padding-top: 10px;">
+                    <div class="input-group">
+                        <input style="width: 300px;" type="text" name="search" class="form-control search-input" placeholder="Search.." value="{{ .search }}">
+                    </div>
+                </form>
+            </div>
+            
+            <div class="mt-12">
+                {{ if .search }}
+                    {{ if .addressBooks }}
+                        {{ range .addressBooks }}
+                            <div style="margin-bottom: 0;">
+                                {{ .Lastname }}&ensp;<a href="#" onclick="showDetail('{{ .Lastname }}', '{{ .Address }}', '{{ .Email }}', '{{ .Email2 }}', '{{ .Work }}', '{{ .Mobile }}')" class="view-detail-link">Detail</a>
+                            </div>
+                        {{ end }}
+            </div>
+
+            <!-- Area untuk menampilkan detail -->
+            <div id="detailContainer" class="border p-4 mt-4" style="display: none;">
+                <h5>Detail Kontak</h5>
+                <p>
+                    <b><span id="Lastname"></span></b><br><br>
+                    <span id="Address"></span><br><br>
+                    <strong>Primary Email:</strong> <span id="Email"></span><br>
+                    <strong>Secondary Email:</strong> <span id="Email2"></span><br>
+                    <strong>Work:</strong> <span id="Work"></span><br>
+                    <strong>Mobile:</strong> <span id="Mobile"></span><br>
+                </p>
+            </div>
+
+            <script>
+                function showDetail(lastname, address, email, email2, work, mobile) {
+                    document.getElementById('Lastname').innerHTML = lastname;
+                    document.getElementById('Address').innerHTML = address;
+                    document.getElementById('Email').textContent = email;
+                    document.getElementById('Email2').textContent = email2;
+                    document.getElementById('Work').innerHTML = work;
+                    document.getElementById('Mobile').textContent = mobile;
+
+                    // Tampilkan area detail
+                    document.getElementById('detailContainer').style.display = 'block';
+                }
+            </script>
+            <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+                <div>
+                    {{ if gt .totalContacts 0 }}
+                        <p>Showing {{ .fromEntry }} to {{ .toEntry }} of {{ .totalContacts }} entries</p>
+                    {{ else }}
+                        <p>No entries found</p>
+                    {{ end }}
+                </div>
+                <!-- Kontrol Pagination -->
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        {{ if gt .currentPage 1 }}
+                        <li class="page-item">
+                            <a class="page-link" href="/address-book?page={{ sub .currentPage 1 }}&search={{ .search }}">Previous</a>
+                        </li>
+                        {{ else }}
+                        <li class="page-item disabled">
+                            <span class="page-link">Previous</span>
+                        </li>
+                        {{ end }}
+                        {{ if lt .currentPage .totalPages }}
+                        <li class="page-item">
+                            <a class="page-link" href="/address-book?page={{ add .currentPage 1 }}&search={{ .search }}">Next</a>
+                        </li>
+                        {{ else }}
+                        <li class="page-item disabled">
+                            <span class="page-link">Next</span>
+                        </li>
+                        {{ end }}
+                    </ul>
+                </nav>
+            </div>
+            {{ else }}
+                <div class="alert alert-warning">No data</div>
+            {{ end }}
+            {{ end }}
+        </div>
+    </div>
+</div>
+{{ end }}

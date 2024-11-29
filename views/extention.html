@@ -1,0 +1,33 @@
+{{ define "content" }}
+<div class="container-fluid">
+    <div class="row justify-content-center mt-4">
+        <div class="header-01 d-flex justify-content-between align-items-center mt-7">
+            <h4 class="badge bg-black text-white mt-5 ml-3">Extention Phone</h4>
+        </div>
+        {{ range $division, $records := .groupedData }}
+        <div class="col-lg-4 col-md-6">
+            <table class="table table-striped mb-4 mt-11 table-custome" style="border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th>{{ $division }}</th>
+                        <th></th>
+                    </tr>
+                    <tr style="color: #fff;" class="bg-dark">
+                        <th>Name</th>
+                        <th>Ext</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ range $records }}
+                    <tr>
+                        <td>{{ .Name }}</td>
+                        <td>{{ .ExtPhone }}</td>
+                    </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+        </div>
+        {{ end }}
+    </div>
+</div>
+{{ end }}

@@ -1,0 +1,92 @@
+{{ define "content" }}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-sm-12">
+            <div class="header-01 mb-0 mt-7 d-flex align-items-center">
+                <h1 class="badge bg-success text-white mt-5 ml-3">HSX</h1>
+                <h3 class="m-2 mt-5">Frequently Asked Questions</h3>
+            </div>
+            <div class="content-inner cs-mb">
+                <!-- Accordion FAQ -->
+                <div class="accordion" id="faqAccordion">
+                    <div class="card">
+                        <div class="card-header bg-dark text-white" id="headingOne">
+                            <h5 class="mb-0">
+                                <a class="d-block text-white" data-toggle="collapse" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                    Mohon di cek apakah koneksi saya bermasalah?
+                                </a>
+                            </h5>
+                        </div>
+                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#faqAccordion">
+                            <div class="card-body" style="font-size: 1rem;">
+                                <!-- Isi Accordion -->
+                                <b>Hal hal yang harus di lakukan sbb :</b><br>
+                                    1. Tanyakan no customer<br>
+                                    2. Cari di datek<br>
+                                    3. Tanyakan untuk layanan yang kmna yg bermasalah<br>
+                                    4. Jika portnya merah ( berarti indikasi fisik down )<br>
+                                    5. Cek perangkat sisi customer<br>
+                                    6. Jika portnya hijau ( fisik hidup )<br>
+                                    7. Klik sw untuk cek mac address ke dua sisi.<br>
+                                    8. Terbaca informasikan ke customer untuk cek perangkat / configurasi di sisi
+                                    customer<br>
+                                    9. Tidak terbaca eskalasi L2
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header bg-dark text-white" id="headingTwo">
+                            <h5 class="mb-0">
+                                <a class="d-block text-white" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    Mohon di cek koneksi ke cloud apakah ada masalah?
+                                </a>
+                            </h5>
+                        </div>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#faqAccordion">
+                            <div class="card-body" style="font-size: 1rem;">
+                                <!-- Isi Accordion -->
+                                <b>Dalam case ini cloud adalah ( GCP,ALIBABA,AWS,AZURE dll)
+                                    Jika point A 1- 8 ok maka lanjut sbb :</b><br><br>
+                                <b>GCP ( Google Cloud Platform )</b><br><br>
+                                <b>Beberapa pertanyaan yang harus di tanyakan ke customer :</b><br>
+                                1 .Ping ptp nya reply atau tidak ( related ke point A nomor 7 )<br>
+                                2. BGP nya up kah.<br>
+                                3. Setting BGPnya boleh di infokah.<br>
+                                4. Jika semua sudah ok dan amsih down eskalasi L2<br><br>
+                                <b>Alibabacloud</b><br><br>
+                                <b>Beberapa pertanyaan yang harus di tanyakan ke customer :</b><br>
+                                1. Jika menggunakan BGP, apakah BGP nya sudah up? Setting BGP nya sudah benar?<br>
+                                2. Ping ptp nya reply kah?<br>
+                                3. Setting routing static nya sudah benar kah?<br>
+                                4. Jika semua sudah ok dan amsih down eskalasi L2
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header bg-dark text-white" id="headingThree">
+                            <h5 class="mb-0">
+                                <a class="d-block text-white" data-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    Mohon di cek BW saya ko ga sesuai?
+                                </a>
+                            </h5>
+                        </div>
+                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#faqAccordion">
+                            <div class="card-body" style="font-size: 1rem;">
+                                <!-- Isi Accordion -->
+                                1. Tanyakan no customer<br>
+                                2. Cari di datek<br>
+                                3. Tanyakan untuk layanan yang kmna yg bermasalah<br>
+                                4. Klik interface untuk cek BW.<br>
+                                5. Informasi bw ada di dalam kolom<br>
+                                6. Sesuai informasikan ke Customer<br>
+                                7. Tidak sesuai eskalasi L2
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ end }}
