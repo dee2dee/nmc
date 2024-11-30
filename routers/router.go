@@ -15,7 +15,6 @@ import (
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
 
-	// Enkripsi Cookie
 	store := cookie.NewStore([]byte("dDskjsasfasjbchiusdyiFFKJhjdsfDoioajfDKFjHjkiifojafjDSPPPFK"))
 	store.Options(sessions.Options{
 		MaxAge:   3600,
@@ -24,23 +23,19 @@ func SetupRouter() *gin.Engine {
 	})
 	r.Use(sessions.Sessions("session", store))
 
-	// Serve static files like CSS, JS, and images
 	r.Static("/assets", "./assets")
 	r.Static("/files/pdfs", "./files/pdfs")
 	r.Static("/files/excel", "./files/excel")
 
-	// Helper function 'add' dan 'sub'
 	r.SetFuncMap(template.FuncMap{
 		"add": func(a, b int) int { return a + b },
 		"sub": func(a, b int) int { return a - b },
 	})
 
-	// Load template
 	r.HTMLRender = views.LoadTemplates()
 
 	log.Println("Templates loaded successfully")
 
-	// GET
 	r.GET("/", controllers.HomePage)
 	r.GET("/address-book", controllers.GetAddressBook)
 	r.GET("/wu-corporate1", controllers.WuCorp1)
@@ -51,7 +46,6 @@ func SetupRouter() *gin.Engine {
 	r.GET("/divisions", controllers.GetDivisions)
 	r.GET("/session-status", controllers.SessionStatus)
 
-	// Route with auth
 	auth := r.Group("/auth")
 	auth.Use(middlewares.AuthRequired(), middlewares.NoCache())
 	auth.GET("/dashboard", controllers.Dashboard)
@@ -60,7 +54,6 @@ func SetupRouter() *gin.Engine {
 	auth.GET("/extention", controllers.GetExtentionPhone)
 	auth.GET("/user", controllers.GetUser)
 
-	// POST
 	r.POST("/contact/search", controllers.GetContact)
 	r.POST("/extention", controllers.AddExtentionPhone)
 	r.POST("/extention/search", controllers.GetExtentionPhone)
@@ -74,13 +67,11 @@ func SetupRouter() *gin.Engine {
 	r.POST("/user", controllers.AddUser)
 	r.POST("/user/search", controllers.GetUser)
 
-	// PUT
 	r.PUT("/contact/:id", controllers.UpdateContactAddress)
 	r.PUT("/escalation/:id", controllers.UpdateEscalation)
 	r.PUT("/extention/:id", controllers.UpdateExtentionPhone)
 	r.PUT("/user/reset-password/:id", controllers.ResetPassword)
 
-	// DELETE
 	r.DELETE("/contact/:id", controllers.DeleteContactAddress)
 	r.DELETE("/escalation/:id", controllers.DeleteEscal)
 	r.DELETE("/extention/:id", controllers.DeleteExtPhone)
