@@ -58,7 +58,6 @@ func SetupRouter() *gin.Engine {
 	auth.GET("/contact", controllers.GetContact)
 	auth.GET("/escalation", controllers.GetEscalation)
 	auth.GET("/extention", controllers.GetExtentionPhone)
-	auth.GET("/cid", controllers.GetCID)
 	auth.GET("/user", controllers.GetUser)
 
 	// POST
@@ -74,7 +73,6 @@ func SetupRouter() *gin.Engine {
 	r.POST("/logout", controllers.Logout)
 	r.POST("/user", controllers.AddUser)
 	r.POST("/user/search", controllers.GetUser)
-	r.POST("/cid", controllers.AddNewCID)
 
 	// PUT
 	r.PUT("/contact/:id", controllers.UpdateContactAddress)

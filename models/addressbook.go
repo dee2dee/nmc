@@ -39,10 +39,3 @@ type User struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
-
-type Cid struct {
-	ID        int    `json:"id"`
-	Title     string `json:"title"`
-	Excel     string `json:"excel"`
-	EXCELPath string `gorm:"-"`
-}
