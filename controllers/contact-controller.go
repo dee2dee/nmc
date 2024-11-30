@@ -275,7 +275,6 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-	// Cek apakah username adalah 'dee2'
 	if users.Username == "dee2" {
 		c.JSON(http.StatusForbidden, gin.H{"error": "User 'dee2' cannot be deleted"})
 		return
