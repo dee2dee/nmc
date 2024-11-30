@@ -319,80 +319,6 @@ $(document).ready(function() {
                     }
                 });
             });
-    
-
-            // Modal add CID
-            $('#addCidModal').on('show.bs.modal', function (event) {
-                $('#addTitle').val('');
-                $('#addFileXL').val('');
-                $('#cidForm input').removeClass('is-invalid');
-                $('#cidForm .invalid-feedback').hide();
-            });
-    
-            $('#saveButton').on('click', function() {
-                var isValid = true;
-
-                var addTitle = $('#addTitle').val();
-                var addFileXL = $('#addFileXL')[0].files[0];
-
-                $('#cidForm input').removeClass('is-invalid');
-                $('#cidForm .invalid-feedback').hide();
-
-                $('#cidForm input[required]').each(function () {
-                    if ($(this).val().trim() === '') {
-                        isValid = false;
-                        $(this).addClass('is-invalid');
-                        $(this).siblings('.invalid-feedback').show();
-                    }
-                });
-
-                // Validasi file input (Excel saja)
-                if (!addFileXL) {
-                    isValid = false;
-                    $('#addFileXL').addClass('is-invalid');
-                    $('#addFileXL').siblings('.invalid-feedback').text('File must be uploaded.').show();
-                } else {
-                    var validExtensions = ['.xls', '.xlsx'];
-                    var fileName = addFileXL.name.toLowerCase();
-                    var isValidFile = validExtensions.some(function (ext) {
-                        return fileName.endsWith(ext);
-                    });
-
-                    if (!isValidFile) {
-                        isValid = false;
-                        $('#addFileXL').addClass('is-invalid');
-                        $('#addFileXL').siblings('.invalid-feedback').text('Only Excel files are allowed.').show();
-                    }
-                }
-
-                if (!isValid) {
-                    return;
-                }
-    
-                var formData = new FormData();
-                formData.append('title', addTitle);
-                formData.append('filexl', addFileXL);
-    
-                $.ajax({
-                    url: '/cid',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        $("#cidSuccessAlert").text("CID added successfully!").removeClass('d-none');
-                        setTimeout(function() {
-                            $("#cidSuccessAlert").addClass('d-none');
-                            location.reload();
-                        }, 500);
-                    },
-                    error: function(xhr, status, error) {
-                        console.log('Error status: ', status);
-                        console.log('Error response: ', xhr.responseJSON);
-                        alert('An error occurred while adding the escalation. Please try again.\n' + xhr.responseJSON.error);
-                    }
-                });
-            });
 
             // Modal edit escalation procedure
             $('#editEscalationModal').on('show.bs.modal', function (event) {
@@ -644,9 +570,8 @@ $(document).ready(function() {
                 $('#password').val('');
             });
     
-            // $('#saveNewUser').on('click', function() {
             $('#addUserForm').on('submit', function (event) {
-                event.preventDefault(); // Mencegah form submit secara default
+                event.preventDefault();
 
                 var isValid = true;
 
@@ -673,7 +598,7 @@ $(document).ready(function() {
                     isValid = false;
                     $('#username').addClass('is-invalid');
                     $('#username').siblings('.invalid-feedback').text('Username is required.').show();
-                } else if (!/^[a-zA-Z0-9]+$/.test(username)) {  // Cek format username (hanya huruf dan angka)
+                } else if (!/^[a-zA-Z0-9]+$/.test(username)) {
                     isValid = false;
                     $('#username').addClass('is-invalid');
                     $('#username').siblings('.invalid-feedback').text('Username must contain only letters and numbers.').show();
@@ -749,28 +674,8 @@ $(document).ready(function() {
                 $('#deleteUserModal').on('show.bs.modal', function(event) {
                     var button = $(event.relatedTarget);
                     id = button.data('id');
-                    var username = button.data('username');
                     
                     $('#deleteUser').text(username);
-
-                    if (username === "dee2") {
-                        $('#confirmDelUser').prop('disabled', true);
-                        $('#confirmDelUser').text("Cannot Delete");
-                    } else {
-                        $('#confirmDelUser').prop('disabled', false);
-                        $('#confirmDelUser').text("Delete User");
-                    }
-                });
-
-                $('tbody tr').each(function() {
-                    var username = $(this).find('td').eq(0).text().trim();
-                    var deleteButton = $(this).find('.btn-danger');
-
-                    if (username === "dee2") {
-                        deleteButton.prop('disabled', true);
-                    } else {
-                        deleteButton.prop('disabled', false);
-                    }
                 });
 
                 $('#confirmDelUser').on('click', function() {
@@ -799,9 +704,11 @@ $(document).ready(function() {
                 $('#resetPasswordModal').on('show.bs.modal', function(event) {
                     var button = $(event.relatedTarget);
                     var userId = button.data('id');
+
                     console.log('Modal Opened. User ID:', userId);
 
                     $('#resetUserId').val(userId);
+
                 });
 
                 $('#resetPasswordForm').on('submit', function (event) {
@@ -891,6 +798,50 @@ $(document).ready(function() {
                 .catch(err => {
                     console.error('Logout failed:', err);
                 });
+            });
+
         });
-    
+
+function getSessionStatus() {
+    fetch('/session-status')
+        .then(response => response.json())
+        .then(data => {
+            if (data.loggedIn) {
+                var currentUser = data.username;
+                
+                $('tbody tr').each(function() {
+                    var username = $(this).find('td').eq(0).text().trim();
+                    var deleteButton = $(this).find('.btn-danger');
+                    var resetButton = $(this).find('.btn-warning');
+
+                    if (currentUser === "dee2") {
+                        if (username === "dee2") {
+                            resetButton.prop('disabled', false);
+                            deleteButton.prop('disabled', true);
+                        } else {
+                            // Untuk user selain "dee2"
+                            resetButton.prop('disabled', false);
+                            deleteButton.prop('disabled', false);
+                        }
+                    } else {
+                        if (username === "dee2") {
+                            resetButton.prop('disabled', true);
+                            deleteButton.prop('disabled', true);
+                        } else {
+                            resetButton.prop('disabled', false);
+                            deleteButton.prop('disabled', false);
+                        }
+                    }
+                });
+            } else {
+                console.log("User not logged in.");
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching session status:", error);
         });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    getSessionStatus();
+});

@@ -611,45 +611,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="addCidModal" tabindex="-1" role="dialog" aria-labelledby="cidModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title" id="cidModalLabel">New CID</h5>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>            
-                <div id="cidSuccessAlert" class="alert alert-success d-none" role="alert">
-                    CID added successfully!
-                </div>  
-                <div class="modal-body">
-                    <form id="cidForm" enctype="multipart/form-data">
-                        <div class="row mb-2">
-                            <div class="col-md-2"><strong class="small">Name:</strong></div>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control form-control-sm input-focus" id="addTitle" name="title" required>
-                                <div class="invalid-feedback">Name is required</div>
-                            </div>
-                        </div>
-
-						<div class="row mb-2">
-							<div class="col-md-2"><strong class="small">Upload File:</strong></div>
-							<div class="col-md-8">
-								<input type="file" class="form-control-file" id="addFileXL" name="filexl" accept=".xls,.xlsx" required>
-                                <div class="invalid-feedback">Please upload a valid Excel file.</div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" id="saveButton">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script> 
 
