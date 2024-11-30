@@ -21,7 +21,6 @@
                         {{ end }}
             </div>
 
-            <!-- Area untuk menampilkan detail -->
             <div id="detailContainer" class="border p-4 mt-4" style="display: none;">
                 <h5>Detail Kontak</h5>
                 <p>
@@ -43,7 +42,6 @@
                     document.getElementById('Work').innerHTML = work;
                     document.getElementById('Mobile').textContent = mobile;
 
-                    // Tampilkan area detail
                     document.getElementById('detailContainer').style.display = 'block';
                 }
             </script>
@@ -55,7 +53,6 @@
                         <p>No entries found</p>
                     {{ end }}
                 </div>
-                <!-- Kontrol Pagination -->
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
                         {{ if gt .currentPage 1 }}

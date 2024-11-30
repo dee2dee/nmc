@@ -9,7 +9,6 @@ import (
 func LoadTemplates() multitemplate.Renderer {
 	tmpl := multitemplate.NewRenderer()
 
-	// Helper function 'add' dan 'sub'
 	funcMap := template.FuncMap{
 		"add": func(a, b int) int { return a + b },
 		"sub": func(a, b int) int { return a - b },
