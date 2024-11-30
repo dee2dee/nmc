@@ -7,7 +7,6 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-    <!-- Local -->
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="/assets/css/style.css" rel="stylesheet">
     <link href="/assets/css/style-dashboard.css" rel="stylesheet">
@@ -73,7 +72,6 @@
             {{ end }}
         </div>
 
-        <!-- Modal Add -->
         <div class="modal fade" id="addContactModal" tabindex="-1" role="dialog" aria-labelledby="addContactModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -153,7 +151,6 @@
         </div>
     </div>
 
-    <!-- Modal Add user -->
     <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
@@ -194,7 +191,6 @@
         </div>
     </div>
 
-    <!-- Modal Reset Password -->
     <div class="modal fade" id="resetPasswordModal" tabindex="-1" role="dialog" aria-labelledby="resetPasswordLabel" aria-hidden="true">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
@@ -227,7 +223,6 @@
         </div>
     </div>
 
-    <!-- Modal view contact-->
     <div class="modal fade" id="viewContactModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -281,7 +276,6 @@
         </div>
     </div>
 
-    <!-- Modal Edit -->
     <div class="modal fade" id="editContactModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -341,7 +335,6 @@
         </div>
     </div>
 
-    <!-- Modal Add Escl-->
     <div class="modal fade" id="addEsclModal" tabindex="-1" role="dialog" aria-labelledby="addEsclModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -364,7 +357,6 @@
                             </div>
                         </div>
 
-                        <!-- File Upload for New PDF -->
 						<div class="row mb-2">
 							<div class="col-md-2"><strong class="small">Upload PDF:</strong></div>
 							<div class="col-md-8">
@@ -382,7 +374,6 @@
         </div>
     </div>
 
-    <!-- Modal edit escl -->
     <div class="modal fade" id="editEscalationModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -428,7 +419,6 @@
         </div>
     </div>
 
-    <!-- Modal add extention phone-->
     <div class="modal fade" id="addExtPhoneModal" tabindex="-1" role="dialog" aria-labelledby="addExtModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -474,7 +464,6 @@
         </div>
     </div>
 
-    <!-- Modal edit extention phone -->
     <div class="modal fade" id="editExtModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -520,7 +509,6 @@
         </div>
     </div>
 
-    <!-- Modal extphone delete -->
     <div class="modal fade" id="deleteExtModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -542,7 +530,6 @@
         </div>
     </div>
 
-    <!-- Modal user delete -->
     <div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -564,7 +551,6 @@
         </div>
     </div>
 
-    <!-- Modal contact delete -->
     <div class="modal fade" id="deleteContactModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -585,7 +571,6 @@
         </div>
     </div>
 
-    <!-- Modal escal delete -->
     <div class="modal fade" id="deleteEscalationModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -606,7 +591,6 @@
         </div>
     </div>
 
-    <!-- Modal Konfirmasi Logout -->
     <div class="modal fade" id="confirmLogoutModal" tabindex="-1" role="dialog" aria-labelledby="confirmLogoutLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -627,7 +611,6 @@
         </div>
     </div>
 
-    <!-- Modal Add Cid-->
     <div class="modal fade" id="addCidModal" tabindex="-1" role="dialog" aria-labelledby="cidModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -650,7 +633,6 @@
                             </div>
                         </div>
 
-                        <!-- File Upload for New Excel -->
 						<div class="row mb-2">
 							<div class="col-md-2"><strong class="small">Upload File:</strong></div>
 							<div class="col-md-8">
@@ -668,37 +650,11 @@
         </div>
     </div>
 
-    <!-- Modal untuk Menampilkan Excel -->
-    <div id="excelViewerModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="excelViewerModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="excelViewerModalLabel">Lihat Excel</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="excelViewer">
-                    <!-- Isi Excel akan dimuat di sini -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-  
-
-
-    <!-- JavaScript for Sidebar Toggle -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script> 
 
-    <!-- SheetJS-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-    <!-- Local -->
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <script src="/assets/js/bootstrap.min.js"></script>
     <script src="/assets/js/main.js"></script>
