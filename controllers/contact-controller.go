@@ -712,6 +712,11 @@ func AddNewEscalation(c *gin.Context) {
 		return
 	}
 
+	if file.Size > 2*1024*1024 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "File size exceeds 2MB"})
+		return
+	}
+
 	fileName := fmt.Sprintf("%s.pdf", title)
 	filePath := filepath.Join("files/pdfs", fileName)
 
@@ -826,6 +831,229 @@ func GetDivisions(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"divisions": divisions,
 	})
+}
+
+func AddBankdt(c *gin.Context) {
+	title := c.PostForm("title")
+
+	file, err := c.FormFile("file")
+	if err != nil {
+		fmt.Println("Error while processing file:", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to get file"})
+		return
+	}
+
+	if title == "" || file == nil {
+		fmt.Println("Missing name or file")
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Name and upload file are required"})
+		return
+	}
+
+	allowedExtensions := []string{".pdf", ".docx", ".xlsx", ".txt"}
+	fileExtension := filepath.Ext(file.Filename)
+	isValidExtension := false
+	for _, ext := range allowedExtensions {
+		if fileExtension == ext {
+			isValidExtension = true
+			break
+		}
+	}
+
+	if !isValidExtension {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file type. Allowed types: .pdf, .docx, .xlsx, .txt"})
+		return
+	}
+
+	if file.Size > 2*1024*1024 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "File size exceeds 2MB"})
+		return
+	}
+
+	filePath := filepath.Join("files/uploads", file.Filename)
+
+	if err := c.SaveUploadedFile(file, filePath); err != nil {
+		fmt.Println("Failed to save file:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save the file"})
+		return
+	}
+
+	bankdt := models.Bankdt{
+		Title:          title,
+		Fileupload:     file.Filename,
+		FileUploadPath: filePath,
+	}
+
+	if err := models.DB.Create(&bankdt).Error; err != nil {
+		fmt.Println("Failed to save data to database:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save file to database"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Record added successfully",
+		"name":    title,
+	})
+
+}
+
+func GetBankdt(c *gin.Context) {
+	var bankdts []models.Bankdt
+	var totalBankdts int64
+
+	search := c.PostForm("search")
+	if search == "" {
+		search = c.Query("search")
+	}
+
+	pageStr := c.Query("page")
+	page := 1
+	if pageStr != "" {
+		if p, err := strconv.Atoi(pageStr); err == nil {
+			page = p
+		}
+	}
+
+	query := models.DB.Model(&models.Bankdt{})
+
+	if search != "" {
+		query = query.Where("title LIKE ?", "%"+search+"%")
+	}
+
+	query.Count(&totalBankdts)
+
+	totalPages := int((totalBankdts + 9) / 10)
+	if page > totalPages {
+		page = 1
+	}
+
+	if err := query.Order("title ASC").Offset((page - 1) * 10).Limit(10).Find(&bankdts).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed fetch data"})
+		return
+	}
+
+	for i := range bankdts {
+		bankdts[i].FileUploadPath = "/files/uploads/" + bankdts[i].Fileupload
+	}
+
+	message := ""
+	if len(bankdts) == 0 {
+		message = "No record!"
+	}
+
+	startIndex := (page-1)*10 + 1
+	endIndex := startIndex + len(bankdts) - 1
+	if endIndex > int(totalBankdts) {
+		endIndex = int(totalBankdts)
+	}
+
+	c.HTML(http.StatusOK, "Bank Data", gin.H{
+		"title":        "Bank Data",
+		"bankdts":      bankdts,
+		"search":       search,
+		"currentPage":  page,
+		"totalPages":   totalPages,
+		"message":      message,
+		"totalEntries": totalBankdts,
+		"startIndex":   startIndex,
+		"endIndex":     endIndex,
+	})
+}
+
+func UpdateBankdt(c *gin.Context) {
+	id := c.Param("id")
+	var bankdt models.Bankdt
+
+	if err := models.DB.First(&bankdt, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Data not found"})
+		return
+	}
+
+	newTitle := c.PostForm("title")
+	bankdt.Title = newTitle
+
+	file, err := c.FormFile("fileupload")
+	if err == nil {
+		if file.Size > 2*1024*1024 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "File size exceeds 2MB"})
+			return
+		}
+
+		allowedExtensions := []string{".pdf", ".docx", ".xlsx", ".txt"}
+		fileExtension := strings.ToLower(filepath.Ext(file.Filename))
+
+		isValid := false
+		for _, ext := range allowedExtensions {
+			if fileExtension == ext {
+				isValid = true
+				break
+			}
+		}
+
+		if !isValid {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file format"})
+			return
+		}
+
+		newFileName := fmt.Sprintf("%s%s", strings.ReplaceAll(newTitle, " ", "_"), fileExtension)
+		newFilePath := filepath.Join("files/uploads", newFileName)
+
+		if bankdt.Fileupload != "" && bankdt.Fileupload != newFileName {
+			oldFilePath := filepath.Join("files/uploads", bankdt.Fileupload)
+			if err := os.Remove(oldFilePath); err != nil && !os.IsNotExist(err) {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to remove old file"})
+				return
+			}
+		}
+
+		if err := c.SaveUploadedFile(file, newFilePath); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save the file"})
+			return
+		}
+
+		bankdt.Fileupload = newFileName
+	}
+
+	if err := models.DB.Save(&bankdt).Error; err != nil {
+		fmt.Println("Error saving to DB:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update data in database"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message":    "Data updated successfully",
+		"fileupload": bankdt.Fileupload,
+	})
+}
+
+func DeleteBankdt(c *gin.Context) {
+	id := c.Param("id")
+
+	var bankdts models.Bankdt
+	if err := models.DB.First(&bankdts, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Data not found"})
+		return
+	}
+
+	filePath := filepath.Join("files/uploads", bankdts.Fileupload)
+	fmt.Println("Attempting to delete file:", filePath)
+
+	if _, err := os.Stat(filePath); err == nil {
+		if err := os.Remove(filePath); err != nil {
+			fmt.Println("Error removing file:", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete the file"})
+			return
+		}
+		fmt.Println("File successfully deleted:", filePath)
+	} else {
+		fmt.Println("File not found or already deleted:", filePath)
+	}
+
+	if err := models.DB.Delete(&bankdts).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Deleted successfully"})
 }
 
 func GetExtentionPhone(c *gin.Context) {

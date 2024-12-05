@@ -39,3 +39,10 @@ type User struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
+
+type Bankdt struct {
+	ID             int    `json:"id"`
+	Title          string `json:"title"`
+	Fileupload     string `json:"fileupload"`
+	FileUploadPath string `gorm:"-"`
+}

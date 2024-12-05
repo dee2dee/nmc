@@ -40,6 +40,13 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link sidebar-item d-flex justify-content-between align-items-center" href="/auth/bankdata">
+                    <span class="menu-icon"><i class="fas fa-database"></i> </span>
+                    Bank Data
+                    <span class="triangle-icon"></span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link sidebar-item d-flex justify-content-between align-items-center" href="/auth/user">
                     <span class="menu-icon"><i class="fas fa-user-cog"></i></span>
                     User Management
@@ -144,7 +151,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" id="saveNewContact">Save</button>
+                        <button type="submit" class="btn btn-primary" form="addContactForm" id="saveNewContact">Save</button>
                     </div>
                 </div>
             </div>
@@ -177,7 +184,7 @@
                                 <div class="col-md-2"><strong class="small">Password:</strong></div>
                                 <div class="col-md-8">
                                     <input type="password" class="form-control form-control-sm input-focus" id="password" name="password" required>
-                                    <div class="invalid-feedback">Password is required</div>
+                                    <div class="invalid-feedback">Password is required. Password must be at least 6 characters long</div>
                                 </div>
                             </div>
                         </form>
@@ -361,14 +368,14 @@
 							<div class="col-md-2"><strong class="small">Upload PDF:</strong></div>
 							<div class="col-md-8">
 								<input type="file" class="form-control-file" id="addEsclPDF" name="pdf" accept=".pdf" required>
-                                <div class="invalid-feedback">File PDF upload is required</div>
+                                <div class="invalid-feedback">File is required and must be a PDF less than 2MB</div>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveNewEscl">Save</button>
+                    <button type="submit" class="btn btn-primary" form="addEsclForm" id="saveNewEscl">Save</button>
                 </div>
             </div>
         </div>
@@ -393,6 +400,7 @@
                             <div class="col-md-2"><strong class="small">Title:</strong></div>
                             <div class="col-md-8">
                                 <input type="text" class="form-control form-control-sm input-focus" id="editEsclTitle" name="title" required>
+                                <div class="invalid-feedback">Name is required</div>
                             </div>
                         </div>
                         
@@ -407,13 +415,14 @@
 							<div class="col-md-2"><strong class="small">Upload New PDF:</strong></div>
 							<div class="col-md-8">
 								<input type="file" class="form-control-file" id="editEsclPDF" name="pdf" accept=".pdf">
+                                <div class="invalid-feedback">File is required and must be a PDF less than 2MB</div>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveEsclChanges">Save</button>
+                    <button type="submit" class="btn btn-primary" form="editEsclForm" id="saveEsclChanges">Save</button>
                 </div>
             </div>
         </div>
@@ -458,7 +467,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveNewExtPhone">Save</button>
+                    <button type="submit" class="btn btn-primary" form="addExtPhoneForm" id="saveNewExtPhone">Save</button>
                 </div>
             </div>
         </div>
@@ -611,11 +620,155 @@
         </div>
     </div>
 
+    <div class="modal fade" id="addBdtModal" tabindex="-1" role="dialog" aria-labelledby="bdtModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="bdtModalLabel">Upload File</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>            
+                <div id="bdtSuccessAlert" class="alert alert-success d-none" role="alert">
+                    Uploaded successfully!
+                </div>  
+                <div class="modal-body">
+                    <small class="d-block" style="font-size: 0.8rem; color: #666;">Please upload SOP, CID, Port Data, etc.</small><br>
+                    <form id="addBdtForm" enctype="multipart/form-data">
+                        <div class="row mb-2">
+                            <div class="col-md-2"><strong class="small">Name:</strong></div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control form-control-sm input-focus" id="addBdtTitle" name="title" required>
+                                <div class="invalid-feedback">Name is required</div>
+                            </div>
+                        </div>
+
+						<div class="row mb-2">
+							<div class="col-md-2"><strong class="small">Upload File:</strong></div>
+							<div class="col-md-8">
+								<input type="file" class="form-control-file" id="addBdtUploadFile" name="uploadFile" accept=".pdf, .docx, .xlsx, .txt" required>
+                                <div class="invalid-feedback">File is required. File allowed: .pdf, .xlsx, .docx, .txt, and must be a file less than 2MB</div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" form="addBdtForm" id="saveNewData">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteBdtModal" tabindex="-1" role="dialog" aria-labelledby="deleteBdtModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5><i class="fas fa-exclamation-circle me-2"></i>&ensp;Confirm</h6>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure want to delete <b><span id="deleteBdtName"></span></b>&nbsp;?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelBdt">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="fileContentModal" tabindex="-1" role="dialog" aria-labelledby="fileContentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="fileContentModalLabel">File Content</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="fileContentModalBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editBdtModal" tabindex="-1" role="dialog" aria-labelledby="editBdtModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-white">
+                    <h5 class="modal-title" id="editBdtModalLabel">Edit Data</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="bdtEdSuccessAlert" class="alert alert-success d-none" role="alert">
+                    Record changed successfully!
+                </div>
+                
+                <div class="modal-body">
+                    <form id="editBdtForm">
+                        <input type="hidden" id="editBdtlID" name="id">
+                        <div class="row mb-2">
+                            <div class="col-md-2"><strong class="small">Name:</strong></div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control form-control-sm input-focus" id="editBdtTitle" name="title" placeholder="Enter Name" required>
+                                <div class="invalid-feedback">Name is required</div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-2" id="currentFileContainer">
+                            <div class="col-md-2"><strong class="small">Current File:</strong></div>
+                            <div class="col-md-8">
+                                <button type="button" id="currentFileLink" class="btn btn-link" onclick="">View Current File</button>
+                            </div>
+                        </div>
+
+						<div class="row mb-2">
+							<div class="col-md-2"><strong class="small">Upload New File:</strong></div>
+							<div class="col-md-8">
+								<input type="file" class="form-control-file" id="bdtEdUploadFile" name="uploadFile" accept=".pdf, .docx, .xlsx, .txt" required>
+                                <div class="invalid-feedback">File is required and must be a fle less than 2MB. Allowed extention .pdf, .docx, .xlsx, .txt</div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" form="editBdtForm" id="saveBdtChanges">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteBdtModal" tabindex="-1" role="dialog" aria-labelledby="deleteBdtModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5><i class="fas fa-exclamation-circle me-2"></i>&ensp;Confirm</h6>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure want to delete:&ensp;<b><span id="deleteBdtName"></span></b>&nbsp;?</p>
+                   
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelBdt">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script> 
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <script src="/assets/js/bootstrap.min.js"></script>
     <script src="/assets/js/main.js"></script>

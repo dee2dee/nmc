@@ -32,12 +32,12 @@ $(document).ready(function() {
                             window.location.href = '/auth/user';
                         } else if (targetHref === '/auth/cid') {
                             window.location.href = '/auth/cid';
+                        } else if (targetHref === '/auth/bankdata') {
+                            window.location.href = '/auth/bankdata';
                         }
                     });
                 });
     
-    
-            // Modal add contact
             $('#addContactModal').on('show.bs.modal', function (event) {
                 $('#addContactFirstName').val('');
                 $('#addContactLastName').val('');
@@ -48,7 +48,9 @@ $(document).ready(function() {
                 $('#addContactMobile').val('');
             });
     
-            $('#saveNewContact').on('click', function() {
+            $('#saveNewContact').on('click', function(e) {
+                e.preventDefault();
+
                 var isValid = true;
 
                 var firstname = $('#addContactFirstName').val();
@@ -111,9 +113,14 @@ $(document).ready(function() {
                     }
                     });
                 });
-    
-    
-            // Modal view contact
+
+                $('#saveNewContact').on('keypress', function(event) {
+                    if (event.which === 13) {
+                        event.preventDefault();
+                        $(this).submit();
+                    }
+                });
+
             $(document).on('click', '[data-target="#viewContactModal"]', function (event) {
                 console.log("View button clicked!");
 
@@ -163,7 +170,6 @@ $(document).ready(function() {
 
             });
 
-            // Modal edit contact
             $('#editContactModal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget);
                 var id = button.data('id');
@@ -186,7 +192,6 @@ $(document).ready(function() {
                 modal.find('#editContactMobile').val(mobile);
             });
     
-            // Save contact
             $('#saveChanges').on('click', function() {
                 var id = $('#editContactID').val();
                 var firstname = $('#editContactService').val();
@@ -230,8 +235,6 @@ $(document).ready(function() {
                     });
                 });
     
-    
-            // Modal delete contact
             var contactID;
             $('#deleteContactModal').on('show.bs.modal', function(event) {
                 var button = $(event.relatedTarget);
@@ -254,23 +257,26 @@ $(document).ready(function() {
                     });
                 });
     
-    
-            // Modal add escalation procedure
-            $('#addEsclModal').on('show.bs.modal', function (event) {
+            $('#addEsclModal').on('show.bs.modal', function () {
                 $('#addEsclName').val('');
                 $('#addEsclPDF').val('');
                 $('#addEsclForm input').removeClass('is-invalid');
-                $('#addEsclForm .invalid-feedback').hide();
+                $('.invalid-feedback').hide();
+
             });
     
-            $('#saveNewEscl').on('click', function() {
+            $('#saveNewEscl').on('click', function(e) {
+                e.preventDefault();
+
                 var isValid = true;
 
                 var addEsclName = $('#addEsclName').val();
                 var addEsclPDF = $('#addEsclPDF')[0].files[0];
 
-                $('#addEsclForm input').removeClass('is-invalid');
-                $('#addEsclForm .invalid-feedback').hide();
+                $('#addEsclForm input').each(function () {
+                    $(this).removeClass('is-invalid');
+                    $(this).siblings('.invalid-feedback').hide();
+                });
 
                 $('#addEsclForm input[required]').each(function () {
                     if ($(this).val().trim() === '') {
@@ -280,15 +286,29 @@ $(document).ready(function() {
                     }
                 });
 
-                // Validasi file input (PDF saja)
+                if (!addEsclName || addEsclName.trim() === '') {
+                    isValid = false;
+                    $('#addEsclName').addClass('is-invalid');
+                    $('#addEsclName').siblings('.invalid-feedback').show();
+                }
+
                 if (!addEsclPDF) {
                     isValid = false;
                     $('#addEsclPDF').addClass('is-invalid');
-                    $('#addEsclPDF').siblings('.invalid-feedback').text('File PDF harus diunggah.').show();
-                } else if (addEsclPDF.type !== 'application/pdf') {
-                    isValid = false;
-                    $('#addEsclPDF').addClass('is-invalid');
-                    $('#addEsclPDF').siblings('.invalid-feedback').text('File harus berformat PDF.').show();
+                    $('#addEsclPDF').siblings('.invalid-feedback').show();
+                } else {
+
+                    if (addEsclPDF.type !== 'application/pdf') {
+                        isValid = false;
+                        $('#addEsclPDF').addClass('is-invalid');
+                        $('#addEsclPDF').siblings('.invalid-feedback').show();
+                    }
+
+                    if (addEsclPDF.size > 2 * 1024 * 1024) {
+                        isValid = false;
+                        $('#addEsclPDF').addClass('is-invalid');
+                        $('#addEsclPDF').siblings('.invalid-feedback').show();
+                    }
                 }
 
                 if (!isValid) {
@@ -305,14 +325,14 @@ $(document).ready(function() {
                     data: formData,
                     processData: false,
                     contentType: false,
-                    success: function(response) {
-                        $("#esclSuccessAlert").text(name + " Escalation table added successfully!").removeClass('d-none');
+                    success: function() {
+                        $("#esclSuccessAlert").removeClass('d-none');
                         setTimeout(function() {
                             $("#esclSuccessAlert").addClass('d-none');
                             location.reload();
                         }, 500);
                     },
-                    error: function(xhr, status, error) {
+                    error: function(xhr, status) {
                         console.log('Error status: ', status);
                         console.log('Error response: ', xhr.responseJSON);
                         alert('An error occurred while adding the escalation. Please try again.\n' + xhr.responseJSON.error);
@@ -320,7 +340,13 @@ $(document).ready(function() {
                 });
             });
 
-            // Modal edit escalation procedure
+            $('#saveNewEscl').on('keypress', function(event) {
+                if (event.which === 13) {
+                    event.preventDefault();
+                    $(this).submit();
+                }
+            });
+
             $('#editEscalationModal').on('show.bs.modal', function (event) {
                     var button = $(event.relatedTarget);
                     var id = button.data('id');
@@ -333,16 +359,52 @@ $(document).ready(function() {
                     modal.find('#currentPDFLink').attr('href', pdfPath);
                 });
     
-            $('#saveEsclChanges').on('click', function() {
+            $('#saveEsclChanges').on('click', function(e) {
+                e.preventDefault();
+
+                var isValid = true;
+
                 var id = $('#editEsclID').val();
                 var title = $('#editEsclTitle').val();
-    
+                var fileInput = $('#editEsclPDF')[0];
+
+                $('#editEsclForm input').each(function () {
+                    $(this).removeClass('is-invalid');
+                    $(this).siblings('.invalid-feedback').hide();
+                });
+
+                if (title.trim() === '') {
+                    isValid = false;
+                    $('#editEsclTitle').addClass('is-invalid');
+                    $('#editEsclTitle').siblings('.invalid-feedback').show();
+                }
+
+                if (fileInput && fileInput.files && fileInput.files.length > 0) {
+                    var file = fileInput.files[0];
+
+                    var maxSize = 2* 1024 * 1024;
+                    if (file.size > maxSize) {
+                        isValid = false;
+                        $('#editEsclPDF').addClass('is-invalid');
+                        $('#editEsclPDF').siblings('.invalid-feedback').text('File must be less than 2MB.').show();
+                    }
+
+                    var fileExtension = file.name.split('.').pop().toLowerCase();
+                    if (fileExtension !== 'pdf') {
+                        isValid = false;
+                        $('#editEsclPDF').addClass('is-invalid');
+                        $('#editEsclPDF').siblings('.invalid-feedback').text('File must be in PDF format.').show();
+                    }
+                }
+
+                if (!isValid) {
+                    return;
+                }
+
                 var formData = new FormData();
                 formData.append("id", id);
                 formData.append("title", title);
     
-                // Jika file PDF baru diupload, tambahkan ke FormData
-                var fileInput = $('#editEsclPDF')[0];
                 if (fileInput && fileInput.files && fileInput.files.length > 0) {
                     formData.append("pdf", fileInput.files[0]);
                 }
@@ -354,7 +416,7 @@ $(document).ready(function() {
                     processData: false,
                     contentType: false,
                     success: function(response) {
-                        $("#esclEdSuccessAlert").text(name + " Escalation changed successfully!").removeClass('d-none');
+                        $("#esclEdSuccessAlert").text("Data changed successfully!").removeClass('d-none');
                         setTimeout(function() {
                             $("#esclEdSuccessAlert").addClass('d-none');
                             $('#currentPDFLink').attr('href', '/files/pdfs/' + response.pdf + '?v=' + new Date().getTime());
@@ -370,8 +432,14 @@ $(document).ready(function() {
                     }
                 });
             });
+
+            $('#saveEsclChanges').on('keypress', function(event) {
+                if (event.which === 13) {
+                    event.preventDefault();
+                    $(this).submit();
+                }
+            });
     
-            // Modal delete escalation procedure
             var esclID;
     
             $('#deleteEscalationModal').on('show.bs.modal', function(event) {
@@ -400,15 +468,237 @@ $(document).ready(function() {
                         }
                     });
                 });
+
+            $('#addBdtModal').on('show.bs.modal', function () {
+                $('#addBdtTitle').val('');
+                $('#addBdtUploadFile').val('');
+                $('#addBdtForm input').removeClass('is-invalid');
+                $('.invalid-feedback').hide();
+
+            });
     
-            // Modal add extention phone
-            $('#addExtPhoneModal').on('show.bs.modal', function (event) {
+            $('#saveNewData').on('click', function(e) {
+                e.preventDefault();
+
+                var isValid = true;
+
+                var addBdtTitle = $('#addBdtTitle').val();
+                var addBdtUploadFile = $('#addBdtUploadFile')[0].files[0];
+
+                $('#addBdtForm input').each(function () {
+                    $(this).removeClass('is-invalid');
+                    $(this).siblings('.invalid-feedback').hide();
+                });
+
+                $('#addBdtForm input[required]').each(function () {
+                    if ($(this).val().trim() === '') {
+                        isValid = false;
+                        $(this).addClass('is-invalid');
+                        $(this).siblings('.invalid-feedback').show();
+                    }
+                });
+
+                if (!addBdtTitle || addBdtTitle.trim() === '') {
+                    isValid = false;
+                    $('#addBdtTitle').addClass('is-invalid');
+                    $('#addBdtTitle').siblings('.invalid-feedback').show();
+                } 
+
+                if (!addBdtUploadFile) {
+                    isValid = false;
+                    $('#addBdtUploadFile').addClass('is-invalid');
+                    $('#addBdtUploadFile').siblings('.invalid-feedback').show();
+                } else {
+                    var allowedExtensions = ['.pdf', '.xlsx', '.docx', '.txt'];
+                    var fileName  = addBdtUploadFile.name.toLowerCase();
+                    var fileExtension = fileName.substring(fileName.lastIndexOf('.'));
+
+                    if (!allowedExtensions.includes(fileExtension)) {
+                        isValid = false;
+                        $('#addBdtUploadFile').addClass('is-invalid');
+                        $('#addBdtUploadFile').siblings('.invalid-feedback').text('File must be in PDF, DOCX, XLSX, or TXT format.').show();
+
+                    } else if (addBdtUploadFile.size > 2 * 1024 * 1024) {
+                        isValid = false;
+                        $('#addBdtUploadFile').addClass('is-invalid');
+                        $('#addBdtUploadFile').siblings('.invalid-feedback').text('File must be less than 2MB.').show();
+                    }
+                }
+
+                if (!isValid) {
+                    return;
+                }
+    
+                var formData = new FormData();
+                formData.append('title', addBdtTitle);
+                formData.append('file', addBdtUploadFile);
+    
+                $.ajax({
+                    url: '/bankdata',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        $("#bdtSuccessAlert").text("Record added successfully!").removeClass('d-none');
+                        $('#addBdtForm').modal('hide');
+                        
+                        setTimeout(function() {
+                            location.reload();
+                        }, 500);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error status: ', status);
+                        console.log('Error response: ', xhr.responseJSON);
+                        alert('An error occurred while adding data. Please try again.\n' + xhr.responseJSON.error);
+                    }
+                });
+            });
+
+            $('#saveNewData').on('keypress', function(event) {
+                if (event.which === 13) {
+                    event.preventDefault();
+                    $(this).submit();
+                }
+            });
+
+            $('#editBdtModal').on('show.bs.modal', function (event) {
+                    var button = $(event.relatedTarget);
+                    var id = button.data('id');
+                    var title = button.data('title');
+                    var fileUploadPath  = button.data('fileupload');
+
+                    console.log("File path for modal:", fileUploadPath);
+                    
+                    var modal = $(this);
+                    modal.find('#editBdtlID').val(id);
+                    modal.find('#editBdtTitle').val(title);
+
+                    modal.find('#currentFileLink').off('click').on('click', function () {
+                        handleFileViewOtEx(fileUploadPath);
+                    });
+
+                });
+
+            $('#saveBdtChanges').on('click', function(e) {
+                e.preventDefault();
+
+                var isValid = true;
+
+                var id = $('#editBdtlID').val();
+                var title = $('#editBdtTitle').val();
+                var fileInput = $('#bdtEdUploadFile')[0];
+
+                $('#editBdtForm input').each(function () {
+                    $(this).removeClass('is-invalid');
+                    $(this).siblings('.invalid-feedback').hide();
+                });
+
+                if (title.trim() === '') {
+                    isValid = false;
+                    $('#editBdtTitle').addClass('is-invalid');
+                    $('#editBdtTitle').siblings('.invalid-feedback').show();
+                }
+
+                if (fileInput && fileInput.files && fileInput.files.length > 0) {
+                    var file = fileInput.files[0];
+
+                    var maxSize = 2* 1024 * 1024;
+                    if (file.size > maxSize) {
+                        isValid = false;
+                        $('#bdtEdUploadFile').addClass('is-invalid');
+                        $('#bdtEdUploadFile').siblings('.invalid-feedback').text('File must be less than 2MB.').show();
+                    }
+
+                    var fileExtension = file.name.split('.').pop().toLowerCase();
+                    if (fileExtension !== 'pdf' && fileExtension !== 'docx' && fileExtension !== 'xlsx' && fileExtension !== 'txt') {
+                        isValid = false;
+                        $('#bdtEdUploadFile').addClass('is-invalid');
+                        $('#bdtEdUploadFile').siblings('.invalid-feedback').text('File must be in PDF, DOCX, XLSX, or TXT format.').show();
+                    }
+                }
+
+                if (!isValid) {
+                    return;
+                }
+    
+                var formData = new FormData();
+                formData.append("id", id);
+                formData.append("title", title);
+    
+                var fileInput = $('#bdtEdUploadFile')[0];
+                if (fileInput && fileInput.files && fileInput.files.length > 0) {
+                    formData.append("fileupload", fileInput.files[0]);
+                }
+
+                
+                $.ajax({
+                    url: '/bankdata/' + id,
+                    type: 'PUT',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        $("#bdtEdSuccessAlert").text("Data changed successfully!").removeClass('d-none');
+                        setTimeout(function() {
+                            $("#bdtEdSuccessAlert").addClass('d-none');
+                            location.reload();
+                        }, 500);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Error:", error);
+                        console.log("Status:", status);
+                        console.log("Response:", xhr.responseText);
+                        alert("Failed to update data.");
+                    }
+                });
+            });
+
+            $('#saveBdtChanges').on('keypress', function(event) {
+                if (event.which === 13) {
+                    event.preventDefault();
+                    $(this).submit();
+                }
+            });
+
+            var bdtID;
+    
+            $('#deleteBdtModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                bdtID = button.data('id');
+                var title = button.data('title');
+    
+                $('#deleteBdtName').text(title);
+            });
+    
+            $('#confirmDelBdt').on('click', function() {
+                $.ajax({
+                    url: '/bankdata/' + bdtID,
+                    type: 'DELETE',
+                    success: function(response) {
+                        console.log('Delete Response:', response);
+                        if (response && response.message === 'Deleted successfully') {
+                            location.reload();
+                        } else {
+                            alert('Failed to delete data.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        alert('Failed delete data.');
+                        }
+                    });
+                });
+
+            $('#addExtPhoneModal').on('show.bs.modal', function () {
                 $('#addDivName').val('');
                 $('#addStafName').val('');
                 $('#addExtPhone').val('');
             });
 
-            $('#saveNewExtPhone').on('click', function() {
+            $('#saveNewExtPhone').on('click', function(e) {
+                e.preventDefault();
+
                 var isValid = true;
 
                 var divName = $('#addDivName').val();
@@ -462,7 +752,13 @@ $(document).ready(function() {
                 });
             });
 
-            // Modal edit extention phone
+            $('#saveNewExtPhone').on('keypress', function(event) {
+                if (event.which === 13) {
+                    event.preventDefault();
+                    $(this).submit();
+                }
+            });
+
             $('#editExtModal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget);
                 var id = button.data('id');
@@ -504,7 +800,6 @@ $(document).ready(function() {
                 });
             });
     
-            // Save extention phone
             $('#saveExtChanges').on('click', function() {
                 var formData = {
                     id: $('#editExtID').val(),
@@ -535,8 +830,6 @@ $(document).ready(function() {
                 });
             });
     
-    
-            // Delete extention phone
             var extID;
     
             $('#deleteExtModal').on('show.bs.modal', function(event) {
@@ -564,14 +857,13 @@ $(document).ready(function() {
                     });
                 });
 
-            // Modal add user
-            $('#addUserModal').on('show.bs.modal', function (event) {
+            $('#addUserModal').on('show.bs.modal', function () {
                 $('#username').val('');
                 $('#password').val('');
             });
     
-            $('#addUserForm').on('submit', function (event) {
-                event.preventDefault();
+            $('#saveNewUser').on('click', function (e) {
+                e.preventDefault();
 
                 var isValid = true;
 
@@ -587,36 +879,30 @@ $(document).ready(function() {
                         isValid = false;
                         $(this).addClass('is-invalid');
                         $(this).siblings('.invalid-feedback').show();
-                    } else {
-                        $(this).removeClass('is-invalid');
-                        $(this).siblings('.invalid-feedback').hide();
                     }
                 });
 
-                // Validasi username
                 if (username.trim() === '') {
                     isValid = false;
                     $('#username').addClass('is-invalid');
-                    $('#username').siblings('.invalid-feedback').text('Username is required.').show();
+                    $('#username').siblings('.invalid-feedback').show();
                 } else if (!/^[a-zA-Z0-9]+$/.test(username)) {
                     isValid = false;
                     $('#username').addClass('is-invalid');
-                    $('#username').siblings('.invalid-feedback').text('Username must contain only letters and numbers.').show();
+                    $('#username').siblings('.invalid-feedback').show();
                 } else {
                     $('#username').removeClass('is-invalid');
                     $('#username').siblings('.invalid-feedback').hide();
                 }
 
-
-                // Validasi password
                 if (password.trim() === '') {
                     isValid = false;
                     $('#password').addClass('is-invalid');
-                    $('#password').siblings('.invalid-feedback').text('Password is required.').show();
+                    $('#password').siblings('.invalid-feedback').show();
                 } else if (password.length < 6) {
                     isValid = false;
                     $('#password').addClass('is-invalid');
-                    $('#password').siblings('.invalid-feedback').text('Password must be at least 6 characters long.').show();
+                    $('#password').siblings('.invalid-feedback').show();
                 } else {
                     $('#password').removeClass('is-invalid');
                     $('#password').siblings('.invalid-feedback').hide();
@@ -659,23 +945,22 @@ $(document).ready(function() {
                     });
                 });
 
-                // Handle Enter keypress event
-                $('#addUserForm').on('keypress', function(event) {
+                $('#saveNewUser').on('keypress', function(event) {
                     if (event.which === 13) {
                         event.preventDefault();
                         $(this).submit();
                     }
                 });
 
-
-                // Delete user
                 var id;
     
                 $('#deleteUserModal').on('show.bs.modal', function(event) {
                     var button = $(event.relatedTarget);
                     id = button.data('id');
+                    var username = button.data('username');
                     
                     $('#deleteUser').text(username);
+
                 });
 
                 $('#confirmDelUser').on('click', function() {
@@ -699,8 +984,6 @@ $(document).ready(function() {
                         });
                     });
 
-
-                // Reset password
                 $('#resetPasswordModal').on('show.bs.modal', function(event) {
                     var button = $(event.relatedTarget);
                     var userId = button.data('id');
@@ -725,7 +1008,6 @@ $(document).ready(function() {
                         $(this).removeClass('is-invalid');
                     });
 
-                    // Validasi input password
                     if (!password || password.trim() === '') {
                         isValid = false;
                         $('#newPassword').addClass('is-invalid');
@@ -768,7 +1050,6 @@ $(document).ready(function() {
                     });
                 });
 
-                // Handle Enter keypress event
                 $('#confirmResetPassword').on('keypress', function(event) {
                     if (event.which === 13) {
                         event.preventDefault();
@@ -819,7 +1100,6 @@ function getSessionStatus() {
                             resetButton.prop('disabled', false);
                             deleteButton.prop('disabled', true);
                         } else {
-                            // Untuk user selain "dee2"
                             resetButton.prop('disabled', false);
                             deleteButton.prop('disabled', false);
                         }
@@ -845,3 +1125,88 @@ function getSessionStatus() {
 document.addEventListener('DOMContentLoaded', function() {
     getSessionStatus();
 });
+
+function handleFileView(filePath) {
+
+    const basePath = "/files/uploads/";
+
+    console.log("File path received:", filePath);
+
+    let cleanFilePath  = filePath.trim();
+
+    if (!cleanFilePath || cleanFilePath === "") {
+        alert("File path is not available!");
+        return;
+    }
+
+    const fileExtension = filePath.split('.').pop().toLowerCase();
+
+    console.log("Cleaned file path:", filePath);
+    console.log("File extension detected:", fileExtension);
+
+    if (!filePath || filePath === "") {
+        alert("File path is not available!");
+        return;
+    }
+
+    if (fileExtension === "pdf") {
+        window.open(basePath + filePath, '_blank');
+    } else if (fileExtension === "txt") {
+        fetch(basePath + filePath)
+            .then(response => response.text())
+            .then(content => {
+                document.getElementById('fileContentModalBody').textContent = content;
+                
+                $('#fileContentModal').modal('show');
+            })
+            .catch(error => console.error("Error loading file:", error));
+    } else if (["docx", "xlsx"].includes(fileExtension)) {
+        
+        window.location.href = basePath + filePath;
+    } else {
+        
+        alert("Unsupported file type: " + filePath);
+    }
+
+}
+
+
+$('#fileContentModal').on('hidden.bs.modal', function () {
+    location.reload();
+});
+
+
+function handleFileViewOtEx(filePath) {
+    if (!filePath || filePath.trim() === "") {
+        alert("File path is not available!");
+        return;
+    }
+
+    const cleanFilePath = filePath.trim();
+    const fileExtension = cleanFilePath.split('.').pop().toLowerCase();
+
+    console.log("File path received:", cleanFilePath);
+    console.log("File extension detected:", fileExtension);
+
+    if (fileExtension === "pdf") {
+        window.open(cleanFilePath, '_blank');
+    } else if (fileExtension === "txt") {
+        fetch(cleanFilePath)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Failed to load file: ${response.statusText}`);
+                }
+                return response.text();
+            })
+            .then(content => {
+                $('#editBdtModal').hide();
+                document.getElementById('fileContentModalBody').textContent = content;
+                $('#fileContentModal').modal('show');
+            })
+            .catch(error => console.error("Error loading file:", error));
+    } else if (["docx", "xlsx"].includes(fileExtension)) {
+        window.location.href = cleanFilePath;
+    } else {
+        alert("Unsupported file type: " + fileExtension);
+    }
+}

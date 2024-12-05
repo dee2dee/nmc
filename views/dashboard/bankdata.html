@@ -1,0 +1,72 @@
+{{ define "content" }}
+<link href="/assets/css/style-template.css" rel="stylesheet">   
+<div class="container-fluid content-area">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <h2 style="color: gray;">Bank Data</h2>
+            <div style="display: flex;justify-content: space-between; align-items: center;">
+                <button class="btn btn-sm btn-success ml-0 mt-2 mb-2" data-toggle="modal" data-target="#addBdtModal"><i class="fas fa-plus"></i></button>
+                <form class="mt-2 mb-2" id="searchForm" method="POST" action="/bankdata/search" style="width: 50%;">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control search-input" placeholder="Search.." value="{{ .search }}">
+                    </div>
+                </form>
+            </div>
+                <table class="table table-striped mt-0 table-custom" style="border-collapse: collapse;">
+                    <thead style="position: sticky;">
+                        <tr style="top: 160px; color: #fff;">
+                            <th style="width: 30%;">Name</th>
+                            <th style="width: 20%; text-align: center;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ range .bankdts }}
+                        <tr id="contactRow_{{ .ID }}">
+                            <td>{{ .Title }}</td>
+                            <td style="text-align: center;">
+                                <button class="btn btn-info btn-sm" onclick="handleFileView('{{ .Fileupload }}')"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editBdtModal" data-id="{{ .ID }}" data-title="{{ .Title }}" data-fileupload="{{ .FileUploadPath }}"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteBdtModal" data-id="{{ .ID }}" data-title="{{ .Title }}"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        {{ end }}
+                    </tbody>
+                </table>
+                {{ if .message }}
+                    <div class="alert alert-warning text-center">{{ .message }}</div>
+                {{ end }}
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div>
+                        {{ if gt .totalEntries 0 }}
+                            <p>Showing {{ .startIndex }} to {{ .endIndex }} of {{ .totalEntries }} entries</p>
+                        {{ else }}
+                            <p>No entries found</p>
+                        {{ end }}
+                    </div>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            {{ if gt .currentPage 1 }}
+                            <li class="page-item">
+                                <a class="page-link" href="/auth/bankdata?page={{ sub .currentPage 1 }}&search={{ .search }}">Previous</a>
+                            </li>
+                            {{ else }}
+                            <li class="page-item disabled">
+                                <span class="page-link">Previous</span>
+                            </li>
+                            {{ end }}
+                            {{ if lt .currentPage .totalPages }}
+                            <li class="page-item">
+                                <a class="page-link" href="/auth/bankdata?page={{ add .currentPage 1 }}&search={{ .search }}">Next</a>
+                            </li>
+                            {{ else }}
+                            <li class="page-item disabled">
+                                <span class="page-link">Next</span>
+                            </li>
+                            {{ end }}
+                        </ul>
+                    </nav>
+                </div> 
+        </div>
+    </div>
+</div>
+{{ end }}

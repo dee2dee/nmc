@@ -12,13 +12,6 @@ func LoadTemplates() multitemplate.Renderer {
 	funcMap := template.FuncMap{
 		"add": func(a, b int) int { return a + b },
 		"sub": func(a, b int) int { return a - b },
-		"until": func(count int) []int {
-			var result []int
-			for i := 0; i < count; i++ {
-				result = append(result, i)
-			}
-			return result
-		},
 	}
 
 	tmpl.AddFromFiles("Home", "views/base.html", "views/banner.html")
@@ -33,6 +26,7 @@ func LoadTemplates() multitemplate.Renderer {
 	tmpl.AddFromFilesFuncs("Extention", funcMap, "views/dashboard/dashboard.html", "views/dashboard/extention.html")
 	tmpl.AddFromFilesFuncs("Address-book", funcMap, "views/base.html", "views/address-book.html")
 	tmpl.AddFromFilesFuncs("Contact", funcMap, "views/dashboard/dashboard.html", "views/dashboard/contact.html")
+	tmpl.AddFromFilesFuncs("Bank Data", funcMap, "views/dashboard/dashboard.html", "views/dashboard/bankdata.html")
 
 	return tmpl
 }

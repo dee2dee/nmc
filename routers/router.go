@@ -25,7 +25,8 @@ func SetupRouter() *gin.Engine {
 
 	r.Static("/assets", "./assets")
 	r.Static("/files/pdfs", "./files/pdfs")
-	r.Static("/files/excel", "./files/excel")
+
+	r.Static("/files/uploads", "./files/uploads")
 
 	r.SetFuncMap(template.FuncMap{
 		"add": func(a, b int) int { return a + b },
@@ -52,6 +53,7 @@ func SetupRouter() *gin.Engine {
 	auth.GET("/contact", controllers.GetContact)
 	auth.GET("/escalation", controllers.GetEscalation)
 	auth.GET("/extention", controllers.GetExtentionPhone)
+	auth.GET("/bankdata", controllers.GetBankdt)
 	auth.GET("/user", controllers.GetUser)
 
 	r.POST("/contact/search", controllers.GetContact)
@@ -66,16 +68,20 @@ func SetupRouter() *gin.Engine {
 	r.POST("/logout", controllers.Logout)
 	r.POST("/user", controllers.AddUser)
 	r.POST("/user/search", controllers.GetUser)
+	r.POST("/bankdata", controllers.AddBankdt)
+	r.POST("/bankdata/search", controllers.GetBankdt)
 
 	r.PUT("/contact/:id", controllers.UpdateContactAddress)
 	r.PUT("/escalation/:id", controllers.UpdateEscalation)
 	r.PUT("/extention/:id", controllers.UpdateExtentionPhone)
 	r.PUT("/user/reset-password/:id", controllers.ResetPassword)
+	r.PUT("/bankdata/:id", controllers.UpdateBankdt)
 
 	r.DELETE("/contact/:id", controllers.DeleteContactAddress)
 	r.DELETE("/escalation/:id", controllers.DeleteEscal)
 	r.DELETE("/extention/:id", controllers.DeleteExtPhone)
 	r.DELETE("/user/:id", controllers.DeleteUser)
+	r.DELETE("/bankdata/:id", controllers.DeleteBankdt)
 
 	return r
 
