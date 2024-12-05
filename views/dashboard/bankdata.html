@@ -5,7 +5,7 @@
         <div class="col-12">
             <h2 style="color: gray;">Bank Data</h2>
             <div style="display: flex;justify-content: space-between; align-items: center;">
-                <button class="btn btn-sm btn-success ml-0 mt-2 mb-2" data-toggle="modal" data-target="#addBdtModal"><i class="fas fa-plus"></i></button>
+                <button class="btn btn-sm text-white btn-custome ml-0 mt-2 mb-2" data-toggle="modal" data-target="#addBdtModal"><i class="fas fa-plus"></i></button>
                 <form class="mt-2 mb-2" id="searchForm" method="POST" action="/bankdata/search" style="width: 50%;">
                     <div class="input-group">
                         <input type="text" name="search" class="form-control search-input" placeholder="Search.." value="{{ .search }}">
@@ -24,9 +24,9 @@
                         <tr id="contactRow_{{ .ID }}">
                             <td>{{ .Title }}</td>
                             <td style="text-align: center;">
-                                <button class="btn btn-info btn-sm" onclick="handleFileView('{{ .Fileupload }}')"><i class="fas fa-eye"></i></button>
-                                <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editBdtModal" data-id="{{ .ID }}" data-title="{{ .Title }}" data-fileupload="{{ .FileUploadPath }}"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteBdtModal" data-id="{{ .ID }}" data-title="{{ .Title }}"><i class="fas fa-trash"></i></button>
+                                <button class="btn btn-sm text-white btn-custome" onclick="handleFileView('{{ .Fileupload }}', event)" data-title="{{ .Title }}"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-sm text-white btn-custome" data-toggle="modal" data-target="#editBdtModal" data-id="{{ .ID }}" data-title="{{ .Title }}" data-fileupload="{{ .FileUploadPath }}"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm text-white btn-custome" data-toggle="modal" data-target="#deleteBdtModal" data-id="{{ .ID }}" data-title="{{ .Title }}"><i class="fas fa-trash"></i></button>
                             </td>
                         </tr>
                         {{ end }}

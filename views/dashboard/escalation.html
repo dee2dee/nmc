@@ -5,7 +5,7 @@
         <div class="col-12">
             <h2 style="color: gray;">Escalation Procedure</h2>
             <div style="display: flex;justify-content: space-between; align-items: center;">
-                <button class="btn btn-sm btn-success ml-0 mt-2 mb-2" data-toggle="modal" data-target="#addEsclModal"><i class="fas fa-plus"></i></button>
+                <button class="btn btn-sm text-white btn-custome ml-0 mt-2 mb-2" data-toggle="modal" data-target="#addEsclModal"><i class="fas fa-plus"></i></button>
                 <form class="mt-2 mb-2" id="searchForm" method="POST" action="/escalation/search" style="width: 50%;">
                     <div class="input-group">
                         <input type="text" name="search" class="form-control search-input" placeholder="Search.." value="{{ .search }}">
@@ -24,9 +24,9 @@
                         <tr id="contactRow_{{ .ID }}">
                             <td>{{ .Title }}</td>
                             <td style="text-align: center;">
-                                <button class="btn btn-info btn-sm" onclick="window.open('{{ .PDFPath }}', '_blank')"><i class="fas fa-eye"></i></button>
-                                <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editEscalationModal" data-id="{{ .ID }}" data-title="{{ .Title }}" data-pdf="{{ .PDFPath }}"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteEscalationModal" data-id="{{ .ID }}" data-title="{{ .Title }}"><i class="fas fa-trash"></i></button>
+                                <button class="btn btn-sm text-white btn-custome" onclick="window.open('{{ .PDFPath }}', '_blank')"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-sm text-white btn-custome" data-toggle="modal" data-target="#editEscalationModal" data-id="{{ .ID }}" data-title="{{ .Title }}" data-pdf="{{ .PDFPath }}"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm text-white btn-custome" data-toggle="modal" data-target="#deleteEscalationModal" data-id="{{ .ID }}" data-title="{{ .Title }}"><i class="fas fa-trash"></i></button>
                             </td>
                         </tr>
                         {{ end }}

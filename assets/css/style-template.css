@@ -25,3 +25,9 @@
     .table-custom th, .table-custom td {
         border: none;
     }
+
+    .btn:focus {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+    

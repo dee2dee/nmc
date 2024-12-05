@@ -574,9 +574,9 @@ $(document).ready(function() {
                     modal.find('#editBdtlID').val(id);
                     modal.find('#editBdtTitle').val(title);
 
-                    modal.find('#currentFileLink').off('click').on('click', function () {
-                        handleFileViewOtEx(fileUploadPath);
-                    });
+                    // modal.find('#currentFileLink').off('click').on('click', function () {
+                    //     handleFileViewOtEx(fileUploadPath);
+                    // });
 
                 });
 
@@ -1092,13 +1092,13 @@ function getSessionStatus() {
                 
                 $('tbody tr').each(function() {
                     var username = $(this).find('td').eq(0).text().trim();
-                    var deleteButton = $(this).find('.btn-danger');
-                    var resetButton = $(this).find('.btn-warning');
+                    var deleteButton = $(this).find('.btn-reset');
+                    var resetButton = $(this).find('.btn-delete');
 
                     if (currentUser === "dee2") {
                         if (username === "dee2") {
-                            resetButton.prop('disabled', false);
-                            deleteButton.prop('disabled', true);
+                            resetButton.prop('disabled', true);
+                            deleteButton.prop('disabled', false);
                         } else {
                             resetButton.prop('disabled', false);
                             deleteButton.prop('disabled', false);
@@ -1126,6 +1126,10 @@ document.addEventListener('DOMContentLoaded', function() {
     getSessionStatus();
 });
 
+$('#fileContentModal').on('hidden.bs.modal', function () {
+    $('#fileContentModalBody').empty();
+})
+
 function handleFileView(filePath) {
 
     const basePath = "/files/uploads/";
@@ -1150,14 +1154,29 @@ function handleFileView(filePath) {
     }
 
     if (fileExtension === "pdf") {
-        window.open(basePath + filePath, '_blank');
+        const modalBody = document.getElementById('fileContentModalBody');
+        if (modalBody) {
+            const pdfIframe = `<iframe src="${basePath + cleanFilePath}" width="100%" height="1000px" frameborder="0" scrolling="no" style="overflow: hidden;"></iframe>`;
+            modalBody.innerHTML = pdfIframe;
+        } else {
+            console.error("Element 'fileContentModalBody' not found!");
+        }
+        $('#fileContentModal').modal('show');
     } else if (fileExtension === "txt") {
         fetch(basePath + filePath)
             .then(response => response.text())
             .then(content => {
-                document.getElementById('fileContentModalBody').textContent = content;
-                
+
+                $('#editBdtModal').modal('hide');
+                const contentModalBody = document.getElementById('fileContentModalBody');
+                if (contentModalBody) {
+                    const sanitizedContent = DOMPurify.sanitize(content);
+                    contentModalBody.innerHTML = sanitizedContent;
+                } else {
+                    console.error("Element 'fileContentModalBody' not found!");
+                }
                 $('#fileContentModal').modal('show');
+
             })
             .catch(error => console.error("Error loading file:", error));
     } else if (["docx", "xlsx"].includes(fileExtension)) {
@@ -1168,45 +1187,4 @@ function handleFileView(filePath) {
         alert("Unsupported file type: " + filePath);
     }
 
-}
-
-
-$('#fileContentModal').on('hidden.bs.modal', function () {
-    location.reload();
-});
-
-
-function handleFileViewOtEx(filePath) {
-    if (!filePath || filePath.trim() === "") {
-        alert("File path is not available!");
-        return;
-    }
-
-    const cleanFilePath = filePath.trim();
-    const fileExtension = cleanFilePath.split('.').pop().toLowerCase();
-
-    console.log("File path received:", cleanFilePath);
-    console.log("File extension detected:", fileExtension);
-
-    if (fileExtension === "pdf") {
-        window.open(cleanFilePath, '_blank');
-    } else if (fileExtension === "txt") {
-        fetch(cleanFilePath)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Failed to load file: ${response.statusText}`);
-                }
-                return response.text();
-            })
-            .then(content => {
-                $('#editBdtModal').hide();
-                document.getElementById('fileContentModalBody').textContent = content;
-                $('#fileContentModal').modal('show');
-            })
-            .catch(error => console.error("Error loading file:", error));
-    } else if (["docx", "xlsx"].includes(fileExtension)) {
-        window.location.href = cleanFilePath;
-    } else {
-        alert("Unsupported file type: " + fileExtension);
-    }
 }
