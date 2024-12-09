@@ -5,6 +5,7 @@ import (
 	"nmc/controllers"
 	"nmc/middlewares"
 	"nmc/views"
+	"os"
 	"text/template"
 
 	"github.com/gin-contrib/sessions"
@@ -26,7 +27,7 @@ func SetupRouter() *gin.Engine {
 	r.Static("/assets", "./assets")
 	r.Static("/files/pdfs", "./files/pdfs")
 
-	r.Static("/files/uploads", "./files/uploads")
+	r.Static("/files/uploads", os.Getenv("FILE_UPLOAD_PATH"))
 
 	r.SetFuncMap(template.FuncMap{
 		"add": func(a, b int) int { return a + b },
@@ -46,6 +47,7 @@ func SetupRouter() *gin.Engine {
 	r.GET("/extention-phone", controllers.GetExtentionPhonePerDivisi)
 	r.GET("/divisions", controllers.GetDivisions)
 	r.GET("/session-status", controllers.SessionStatus)
+	r.GET("/document/:docKey", controllers.GetDocument)
 
 	auth := r.Group("/auth")
 	auth.Use(middlewares.AuthRequired(), middlewares.NoCache())

@@ -15,7 +15,10 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/microcosm-cc/bluemonday"
 	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 func GetAddressBook(c *gin.Context) {
@@ -302,6 +305,10 @@ func AddExtentionPhone(c *gin.Context) {
 		return
 	}
 
+	newExtentionPhone.DivName = sanitizeFileName(newExtentionPhone.DivName)
+	newExtentionPhone.Name = sanitizeFileName(newExtentionPhone.Name)
+	newExtentionPhone.ExtPhone = sanitizePhoneNumber(newExtentionPhone.ExtPhone)
+
 	fmt.Println("New Extention Phone Data:", newExtentionPhone)
 
 	if err := models.DB.Create(&newExtentionPhone).Error; err != nil {
@@ -370,6 +377,9 @@ func UpdateExtentionPhone(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Binding error"})
 		return
 	}
+
+	extensions.Name = sanitizeFileName(extensions.Name)
+	extensions.ExtPhone = sanitizePhoneNumber(extensions.ExtPhone)
 
 	if err := models.DB.Save(&extensions).Error; err != nil {
 		fmt.Println("Error while saving extention with ID", id, ":", err)
@@ -463,15 +473,11 @@ func HomePage(c *gin.Context) {
 
 	if username != nil {
 		c.HTML(http.StatusOK, "Home", gin.H{
-			"title":    "Network Monitoring Center",
 			"username": username,
 		})
 		return
 	}
 
-	c.HTML(http.StatusOK, "Home", gin.H{
-		"title": "Network Monitoring Center",
-	})
 }
 
 func WuCorp1(c *gin.Context) {
@@ -717,8 +723,9 @@ func AddNewEscalation(c *gin.Context) {
 		return
 	}
 
-	fileName := fmt.Sprintf("%s.pdf", title)
-	filePath := filepath.Join("files/pdfs", fileName)
+	sanitizeTitle := sanitizeFileName(title)
+	newFileName := fmt.Sprintf("%s%s", strings.ToLower(sanitizeTitle), filepath.Ext(file.Filename))
+	filePath := filepath.Join("files/pdfs", newFileName)
 
 	if err := c.SaveUploadedFile(file, filePath); err != nil {
 		fmt.Println("Failed to save file:", err)
@@ -728,7 +735,7 @@ func AddNewEscalation(c *gin.Context) {
 
 	escalation := models.Escalation{
 		Title:   title,
-		PDF:     fileName,
+		PDF:     newFileName,
 		PDFPath: filePath,
 	}
 
@@ -759,11 +766,11 @@ func UpdateEscalation(c *gin.Context) {
 	oldTitle := escalation.Title
 	escalation.Title = newTitle
 
-	sanitizedTitle := strings.ReplaceAll(newTitle, " ", "_")
+	sanitizedTitle := sanitizeFileName(strings.ToLower(newTitle))
 	newFileName := fmt.Sprintf("%s.pdf", sanitizedTitle)
 	newFilePath := filepath.Join("files/pdfs", newFileName)
 
-	oldFileName := fmt.Sprintf("%s.pdf", strings.ReplaceAll(oldTitle, " ", "_"))
+	oldFileName := fmt.Sprintf("%s.pdf", sanitizeFileName(strings.ToLower(oldTitle)))
 	oldFilePath := filepath.Join("files/pdfs", oldFileName)
 
 	fmt.Println("New file path:", newFilePath)
@@ -869,7 +876,10 @@ func AddBankdt(c *gin.Context) {
 		return
 	}
 
-	filePath := filepath.Join("files/uploads", file.Filename)
+	sanitizedTitle := sanitizeFileName(title)
+	newFileName := fmt.Sprintf("%s%s", strings.ToLower(sanitizedTitle), fileExtension)
+
+	filePath := filepath.Join("files/uploads", newFileName)
 
 	if err := c.SaveUploadedFile(file, filePath); err != nil {
 		fmt.Println("Failed to save file:", err)
@@ -879,7 +889,7 @@ func AddBankdt(c *gin.Context) {
 
 	bankdt := models.Bankdt{
 		Title:          title,
-		Fileupload:     file.Filename,
+		Fileupload:     newFileName,
 		FileUploadPath: filePath,
 	}
 
@@ -959,6 +969,24 @@ func GetBankdt(c *gin.Context) {
 	})
 }
 
+func sanitizeFileName(title string) string {
+	return strings.Map(func(r rune) rune {
+		if r == '_' || r == '-' || ('a' <= r && r <= 'z') || ('A' <= r && r <= 'Z') || ('0' <= r && r <= '9') {
+			return r
+		}
+		return '_'
+	}, title)
+}
+
+func sanitizePhoneNumber(input string) string {
+	return strings.Map(func(r rune) rune {
+		if r == '-' || r == '+' || r == '/' || ('0' <= r && r <= '9') {
+			return r
+		}
+		return '_'
+	}, input)
+}
+
 func UpdateBankdt(c *gin.Context) {
 	id := c.Param("id")
 	var bankdt models.Bankdt
@@ -969,6 +997,11 @@ func UpdateBankdt(c *gin.Context) {
 	}
 
 	newTitle := c.PostForm("title")
+	if newTitle == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Title cannot be empty"})
+		return
+	}
+
 	bankdt.Title = newTitle
 
 	file, err := c.FormFile("fileupload")
@@ -994,7 +1027,8 @@ func UpdateBankdt(c *gin.Context) {
 			return
 		}
 
-		newFileName := fmt.Sprintf("%s%s", strings.ReplaceAll(newTitle, " ", "_"), fileExtension)
+		sanitizedTitle := sanitizeFileName(newTitle)
+		newFileName := fmt.Sprintf("%s%s", strings.ToLower(sanitizedTitle), fileExtension)
 		newFilePath := filepath.Join("files/uploads", newFileName)
 
 		if bankdt.Fileupload != "" && bankdt.Fileupload != newFileName {
@@ -1190,4 +1224,61 @@ func Logout(c *gin.Context) {
 	session.Save()
 
 	c.JSON(http.StatusOK, gin.H{"message": "Logout successful"})
+}
+
+func GetStructureOrganization(c *gin.Context) {
+	pdfPath := "/files/uploads/struktur.pdf"
+
+	c.HTML(http.StatusOK, "Struktur Organisasi", gin.H{
+		"title":   "Struktur Organisasi",
+		"PDFPath": pdfPath,
+	})
+}
+
+func GetDocument(c *gin.Context) {
+	bashPath := os.Getenv("FILE_UPLOAD_PATH")
+
+	documentMap := map[string]string{
+		"struktur-organisasi": filepath.ToSlash(filepath.Join(bashPath, "struktur_organisasi.pdf")),
+		"tata-tertib":         filepath.ToSlash(filepath.Join(bashPath, "tata_tertib.pdf")),
+		"departemen-support":  filepath.ToSlash(filepath.Join(bashPath, "departemen_support.pdf")),
+		"eskalasi-prosedur":   filepath.ToSlash(filepath.Join(bashPath, "eskalasi_prosedur.pdf")),
+		"hsx-faq":             filepath.ToSlash(filepath.Join(bashPath, "hsx_faq.txt")),
+	}
+
+	docKey := c.Param("docKey")
+	filePath, exists := documentMap[docKey]
+	if !exists {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Document not found"})
+		return
+	}
+
+	title := cases.Title(language.Indonesian).String(strings.ReplaceAll(docKey, "-", " "))
+
+	fileExtension := filepath.Ext(filePath)
+	var fileContent string
+	var IsTextFile bool
+
+	if fileExtension == ".txt" {
+		IsTextFile = true
+
+		content, err := os.ReadFile(filePath)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read the file"})
+			return
+		}
+
+		p := bluemonday.UGCPolicy()
+		fileContent = p.Sanitize(string(content))
+	}
+
+	fileRelativePath := "/files/uploads/" + filepath.Base(filePath)
+
+	c.HTML(http.StatusOK, "document_template", gin.H{
+		"title":       title,
+		"PDFPath":     fileRelativePath,
+		"FileContent": template.HTML(fileContent),
+		"IsTextFile":  IsTextFile,
+	})
+
 }

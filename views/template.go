@@ -20,6 +20,7 @@ func LoadTemplates() multitemplate.Renderer {
 	tmpl.AddFromFiles("HsxFaq", "views/base.html", "views/hsx-faq.html")
 	tmpl.AddFromFiles("Extention Phone", "views/base.html", "views/extention.html")
 	tmpl.AddFromFiles("Dashboard", "views/dashboard/dashboard.html")
+	tmpl.AddFromFiles("document_template", "views/base.html", "views/document_template.html")
 	tmpl.AddFromFilesFuncs("User Management", funcMap, "views/dashboard/dashboard.html", "views/dashboard/user.html")
 	tmpl.AddFromFilesFuncs("Escalation Procedure", funcMap, "views/base.html", "views/escalation.html")
 	tmpl.AddFromFilesFuncs("Escalation", funcMap, "views/dashboard/dashboard.html", "views/dashboard/escalation.html")

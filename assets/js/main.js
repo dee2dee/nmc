@@ -574,10 +574,6 @@ $(document).ready(function() {
                     modal.find('#editBdtlID').val(id);
                     modal.find('#editBdtTitle').val(title);
 
-                    // modal.find('#currentFileLink').off('click').on('click', function () {
-                    //     handleFileViewOtEx(fileUploadPath);
-                    // });
-
                 });
 
             $('#saveBdtChanges').on('click', function(e) {
@@ -602,20 +598,22 @@ $(document).ready(function() {
 
                 if (fileInput && fileInput.files && fileInput.files.length > 0) {
                     var file = fileInput.files[0];
+                    var maxSize = 2 * 1024 * 1024;
+                    var allowedExtensions = ['pdf', 'docx', 'xlsx', 'txt'];
 
-                    var maxSize = 2* 1024 * 1024;
                     if (file.size > maxSize) {
-                        isValid = false;
+                        isValid = true;
                         $('#bdtEdUploadFile').addClass('is-invalid');
                         $('#bdtEdUploadFile').siblings('.invalid-feedback').text('File must be less than 2MB.').show();
                     }
 
                     var fileExtension = file.name.split('.').pop().toLowerCase();
-                    if (fileExtension !== 'pdf' && fileExtension !== 'docx' && fileExtension !== 'xlsx' && fileExtension !== 'txt') {
-                        isValid = false;
+                    if (!fileExtension.includes(fileExtension)) {
+                        isValid = true;
                         $('#bdtEdUploadFile').addClass('is-invalid');
                         $('#bdtEdUploadFile').siblings('.invalid-feedback').text('File must be in PDF, DOCX, XLSX, or TXT format.').show();
                     }
+
                 }
 
                 if (!isValid) {
@@ -626,7 +624,6 @@ $(document).ready(function() {
                 formData.append("id", id);
                 formData.append("title", title);
     
-                var fileInput = $('#bdtEdUploadFile')[0];
                 if (fileInput && fileInput.files && fileInput.files.length > 0) {
                     formData.append("fileupload", fileInput.files[0]);
                 }
@@ -649,7 +646,6 @@ $(document).ready(function() {
                         console.log("Error:", error);
                         console.log("Status:", status);
                         console.log("Response:", xhr.responseText);
-                        alert("Failed to update data.");
                     }
                 });
             });

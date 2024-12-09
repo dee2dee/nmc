@@ -22,6 +22,11 @@ body, html {
     background-color: #000;
 }
 
+input[type="file"] {
+    height: 38px;
+    border-radius: 5px;
+}
+
 .hero {
     background: url('/assets/images/indonet-main-banner-1.jpg') no-repeat center center;
     background-size: cover;
@@ -330,9 +335,12 @@ footer a:hover {
 }
 
 .dropdown-menu {
+    font-size: 12px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     border-radius: 0;
     border-top: 0;
     border-color: #08121d;
+    /* border-color: #a3ad12; */
 }
 
 .custom-navbar:hover {
@@ -347,6 +355,8 @@ footer a:hover {
 }
 
 .nav-item {
+    font-size: 14px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     position: relative;
 }
 
@@ -362,6 +372,8 @@ footer a:hover {
 
 .nav-item:hover .dropdown-menu{
     display: block;
+    padding: 0;
+    margin: 0;
 }
 
 .dropdown:hover {
@@ -369,7 +381,7 @@ footer a:hover {
 }
 
 .dropdown-menu .dropdown-item {
-    padding: 0.5rem 1rem;
+    /* padding: 0.5rem 1rem; */
     color: white;
     text-decoration: none;
 }
