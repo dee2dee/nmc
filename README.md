@@ -124,7 +124,7 @@ Tujuannya untuk mempelajari dan mengimplementasikan:
 -Penerapan MVC dalam project Go
 Status: Aktif (development & internal testing)
 Kontak: dedeeapr17@gmail.com
-GitHub: https://github.com/dee2dee/nmc
+GitHub: [https://github.com/dee2dee/nmc](https://github.com/dee2dee/nmc)
 
 Lisensi
 Proyek ini bersifat **internal dan untuk keperluan pembelajaran**.
