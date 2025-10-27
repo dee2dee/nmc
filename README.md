@@ -7,17 +7,17 @@ Aplikasi ini digunakan secara **lokal (intranet)** dan dikembangkan sebagai proy
 
 ## Struktur Folder
 
-nmc/
-├── assets/      # File statis (CSS, JS, gambar, icon)
-├── controllers/ # Logika utama aplikasi & handler untuk setiap endpoint
-├── middlewares/ # Middleware (AuthRequired, NoCache, Session)
-├── models/      # Model data & koneksi ke database
-├── routers/     # Definisi semua route dan endpoint aplikasi
-├── views/       # Template HTML dan layout tampilan
-├── .env         # Konfigurasi environment (upload path, DB, dsb)
-├── go.mod       # Module dependencies
-├── go.sum       # Dependency checksum
-└── main.go      # Entry point aplikasi
+nmc/  
+├── assets/      # File statis (CSS, JS, gambar, icon)  
+├── controllers/ # Logika utama aplikasi & handler untuk setiap endpoint  
+├── middlewares/ # Middleware (AuthRequired, NoCache, Session)  
+├── models/      # Model data & koneksi ke database  
+├── routers/     # Definisi semua route dan endpoint aplikasi  
+├── views/       # Template HTML dan layout tampilan  
+├── .env         # Konfigurasi environment (upload path, DB, dsb)  
+├── go.mod       # Module dependencies  
+├── go.sum       # Dependency checksum  
+└── main.go      # Entry point aplikasi  
 
 
 ---
@@ -69,7 +69,7 @@ nmc/
 
 ---
 
-Arsitektur Aplikasi
+**Arsitektur Aplikasi**  
 Aplikasi ini menggunakan arsitektur MVC (Model–View–Controller):
 -Models: Menangani koneksi database & struktur data.
 -Controllers: Berisi logic utama dan handler untuk setiap request.
@@ -91,18 +91,18 @@ Modul Utama & Endpoint
 
 ---
 
-Tentang Developer
-Proyek ini dikembangkan sebagai bagian dari pengembangan sistem internal kantor (internship project).
-Tujuannya untuk mempelajari dan mengimplementasikan:
--Struktur aplikasi web dengan Gin
--Middleware & session management
--Autentikasi berbasis session
--Penerapan MVC dalam project Go
-Status: Aktif (development & internal testing)
-Kontak: dedeeapr17@gmail.com
-GitHub: [https://github.com/dee2dee/nmc](https://github.com/dee2dee/nmc)
-
-Lisensi
-Proyek ini bersifat **internal dan untuk keperluan pembelajaran**.
-Tidak untuk distribusi publik tanpa izin dari pemilik repository atau pihak kantor terkait.
+**Tentang Developer**  
+Proyek ini dikembangkan sebagai bagian dari pengembangan sistem internal kantor (internship project).  
+Tujuannya untuk mempelajari dan mengimplementasikan:  
+-Struktur aplikasi web dengan Gin  
+-Middleware & session management  
+-Autentikasi berbasis session  
+-Penerapan MVC dalam project Go  
+Status: Aktif (development & internal testing)  
+Kontak: dedeeapr17@gmail.com  
+GitHub: [https://github.com/dee2dee/nmc](https://github.com/dee2dee/nmc)  
+  
+**Lisensi**  
+Proyek ini bersifat **internal dan untuk keperluan pembelajaran**.  
+Tidak untuk distribusi publik tanpa izin dari pemilik repository atau pihak kantor terkait.  
 
