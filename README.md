@@ -114,6 +114,7 @@ Modul Utama & Endpoint
 | Bank Data       | `/bankdata`     | GET/POST/PUT/DELETE | CRUD data bank           |
 | User            | `/user`         | GET/POST/PUT/DELETE | Manajemen user           |
 
+---
 
 Tentang Developer
 Proyek ini dikembangkan sebagai bagian dari pengembangan sistem internal kantor (internship project).
