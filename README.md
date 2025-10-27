@@ -69,31 +69,6 @@ nmc/
 
 ---
 
-## Cara Menjalankan Aplikasi
-
-### 1. Clone Repository
-```bash
-git clone https://github.com/username/nmc.git
-cd nmc
-
-2. Install Dependencies
-go mod tidy
-
-3. Konfigurasi Environment
-FILE_UPLOAD_PATH=./files/uploads
-SESSION_SECRET=yourSecretKey
-DB_USER=root
-DB_PASS=password
-DB_NAME=nmcdb
-DB_HOST=localhost
-DB_PORT=3306
-
-4. Jalankan Server
-go run main.go
-
-5. Akses di Browser
-http://localhost:8080
-
 Arsitektur Aplikasi
 Aplikasi ini menggunakan arsitektur MVC (Model–View–Controller):
 -Models: Menangani koneksi database & struktur data.
